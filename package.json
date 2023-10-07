@@ -6,16 +6,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": "16.10.0"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vokhanh1207/tkpm.git"
+    "url": "git+https://github.com/vokhanh1207/taxi-booking.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vokhanh1207/tkpm/issues"
+    "url": "https://github.com/vokhanh1207/taxi-booking/issues"
   },
-  "homepage": "https://github.com/vokhanh1207/tkpm#readme",
+  "homepage": "https://github.com/vokhanh1207/taxi-booking#readme",
   "dependencies": {
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2"
