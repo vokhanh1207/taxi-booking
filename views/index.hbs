@@ -1,0 +1,75 @@
+<div class="row booking-view">
+    <div class="col-sm-6">
+        <form onsubmit="checkPrice(event)">
+            <div class="mb-3 row">
+                <label for="fromLocation" class="col-sm-2 col-form-label">From</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" disabled id="fromLocation" placeholder="Current location"
+                        onkeyup="debounceSearchPlaces(event)">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="toLocation" class="col-sm-2 col-form-label">To</label>
+                <div class="col-sm-10">
+                    <div class="to-location-box">
+                        <div class="input">
+                            <input type="text" class="form-control" id="toLocation"
+                                onkeyup="debounceSearchPlaces(event)">
+                        </div>
+                        <div class="search-suggestion-list" id="search-suggestion-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <div class="col-sm-10 offset-sm-2">
+                    <button type="submit" class="btn btn-primary mb-3">Xem giá</button>
+                </div>
+            </div>
+        </form>
+        <div class="price-section" id="price-section" style="display: none;">
+            <div class="row">
+                <label class="col-3 col-sm-3 col-form-label">Xe 4 chỗ</label>
+                <label class="col-6 col-sm-7 col-form-label price" id="price-4-seat"></label>
+                <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
+                    <button class="btn btn-primary" onclick="bookCar('4Seat')">Book</button>
+                </label>
+            </div>
+
+            <div class="row">
+                <label class="col-3 col-sm-3 col-form-label">Xe 4 chỗ VIP</label>
+                <label class="col-6 col-sm-7 col-form-label price" id="price-4-seat-vip"></label>
+                <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
+                    <button class="btn btn-primary" onclick="bookCar('4SeatVIP')">Book</button>
+                </label>
+            </div>
+            <div class="row">
+                <label class="col-3 col-sm-3 col-form-label">Xe 7 chỗ</label>
+                <label class="col-6 col-sm-7 col-form-label price" id="price-7-seat"></label>
+                <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
+                    <button class="btn btn-primary" onclick="bookCar('7Seat')">Book</button>
+                </label>
+            </div>
+            <div class="row">
+                <label class="col-3 col-sm-3 col-form-label">Xe 7 chỗ VIP</label>
+                <label class="col-6 col-sm-7 col-form-label price" id="price-7-seat-vip"></label>
+                <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
+                    <button class="btn btn-primary" onclick="bookCar('7SeatVIP')">Book</button>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div id="map" style="width: 100%; height: 500px;"></div>
+    </div>
+
+    <div class="booking-loading" style="display: none;">
+        <div class="loading-container">
+            <div class="loading-circle circle-1"></div>
+            <div class="loading-circle circle-2"></div>
+        </div>
+        <div class="cancel-booking mb-5">
+            <button class="btn btn-primary" onclick="cancelBooking()"> Hủy chuyến</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+.to-location-box {
+    position: relative;
+}
+
+.search-suggestion-list {
+    border: solid 1px #dee2e6;
+    border-radius: 8px;
+    position: absolute;
+    width: 100%;
+    background: white;
+}
+
+.search-suggestion-list .result-item {
+    padding: 8px;
+    border-bottom: solid 1px #ccc;
+    cursor: pointer;
+}
+
+.search-suggestion-list .result-item:last-child {
+    border-bottom: none;
+}
+
+.price {
+    font-weight: bold;
+}
+
+.booking-view {
+    position: relative;
+}
+
+.booking-loading {
+    position: fixed;
+    display: flex;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background: rgb(0 0 0 / 30%);
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+.loading-container {
+    display: flex;
+    margin: auto;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    border-radius: 50%;
+    position: relative;
+}
+.loading-circle {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: #0d6efd;
+    border-radius: 50%;
+    opacity: 0.6;
+}
+.loading-circle.circle-1 {
+    animation: bubbling 3s infinite;
+}
+.loading-circle.circle-2 {
+    animation: bubbling 3s infinite 1s;
+}
+@keyframes bubbling {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(5.5);
+        opacity: 0;
+    }
+}
