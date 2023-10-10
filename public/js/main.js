@@ -1,4 +1,3 @@
-const GOOGLE_MAPS_API_KEY = "AIzaSyDt9k62SpyxIG3mVjFpTA50DNdWvgfaz5I";
 
 //https://developers.google.com/maps/documentation/javascript/examples/place-details
 let map = null;
