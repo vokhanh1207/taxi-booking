@@ -314,7 +314,7 @@ function mockPrices() {
   $("#price-section").show();
 }
 if ($('.booking-view').length > 0) {
-  mockPrices();
+  // mockPrices();
 }
 
 function selectRide(e) {
