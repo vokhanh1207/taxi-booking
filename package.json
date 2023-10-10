@@ -20,7 +20,14 @@
   },
   "homepage": "https://github.com/vokhanh1207/taxi-booking#readme",
   "dependencies": {
+    "connect-flash": "^0.1.1",
     "express": "^4.18.2",
-    "express-handlebars": "^7.1.2"
+    "express-handlebars": "^7.1.2",
+    "express-session": "^1.17.3",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.33.0"
   }
 }

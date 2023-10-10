@@ -1,61 +1,118 @@
 <div class="row booking-view">
     <div class="col-sm-6">
+        <div class="booking-area">
         <form onsubmit="checkPrice(event)">
             <div class="mb-3 row">
-                <label for="fromLocation" class="col-sm-2 col-form-label">From</label>
+                <label for="fromLocation" class="col-sm-2 col-form-label">Điểm đi</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" disabled id="fromLocation" placeholder="Current location"
-                        onkeyup="debounceSearchPlaces(event)">
+                    <div class="from-location-box search-input">
+                        <div class="input">
+                            <input type="text" class="form-control" id="fromLocation" placeholder="Vị trí hiện tại"
+                                onkeyup="debounceSearchPlaces(event)">
+                        </div>
+                        <div class="search-suggestion-list" id="search-suggestion-list" style="display: none;"></div>
+                    </div>
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="toLocation" class="col-sm-2 col-form-label">To</label>
+                <label for="toLocation" class="col-sm-2 col-form-label">Điểm đến</label>
                 <div class="col-sm-10">
-                    <div class="to-location-box">
+                    <div class="search-input to-location-box">
                         <div class="input">
                             <input type="text" class="form-control" id="toLocation"
                                 onkeyup="debounceSearchPlaces(event)">
                         </div>
-                        <div class="search-suggestion-list" id="search-suggestion-list"></div>
+                        <div class="search-suggestion-list" id="search-suggestion-list" style="display: none;"></div>
                     </div>
                 </div>
             </div>
 
             <div class="mb-3 row">
                 <div class="col-sm-10 offset-sm-2">
-                    <button type="submit" class="btn btn-primary mb-3">Xem giá</button>
+                    <button type="submit" class="btn btn-primary mb-3">Kiểm tra</button>
                 </div>
             </div>
         </form>
         <div class="price-section" id="price-section" style="display: none;">
-            <div class="row">
+            <div class="row" data-taxi-type="4seat">
                 <label class="col-3 col-sm-3 col-form-label">Xe 4 chỗ</label>
                 <label class="col-6 col-sm-7 col-form-label price" id="price-4-seat"></label>
                 <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
-                    <button class="btn btn-primary" onclick="bookCar('4Seat')">Book</button>
+                    <button class="btn btn-outline-primary" onclick="selectRide(event)" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">Chọn</button>
                 </label>
             </div>
 
-            <div class="row">
+            <div class="row" data-taxi-type="4seatVIP">
                 <label class="col-3 col-sm-3 col-form-label">Xe 4 chỗ VIP</label>
                 <label class="col-6 col-sm-7 col-form-label price" id="price-4-seat-vip"></label>
                 <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
-                    <button class="btn btn-primary" onclick="bookCar('4SeatVIP')">Book</button>
+                    <button class="btn btn-outline-primary" onclick="selectRide(event)" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">Chọn</button>
                 </label>
             </div>
-            <div class="row">
+            <div class="row" data-taxi-type="7seat">
                 <label class="col-3 col-sm-3 col-form-label">Xe 7 chỗ</label>
                 <label class="col-6 col-sm-7 col-form-label price" id="price-7-seat"></label>
                 <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
-                    <button class="btn btn-primary" onclick="bookCar('7Seat')">Book</button>
+                    <button class="btn btn-outline-primary" onclick="selectRide(event)" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">Chọn</button>
                 </label>
             </div>
-            <div class="row">
+            <div class="row" data-taxi-type="7seatVIP">
                 <label class="col-3 col-sm-3 col-form-label">Xe 7 chỗ VIP</label>
                 <label class="col-6 col-sm-7 col-form-label price" id="price-7-seat-vip"></label>
                 <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
-                    <button class="btn btn-primary" onclick="bookCar('7SeatVIP')">Book</button>
+                    <button class="btn btn-outline-primary" onclick="selectRide(event)" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">Chọn</button>
                 </label>
+            </div>
+        </div>
+        </div>
+        <div class="riding-area" style="display: none;">
+            <h4>Đã tìm thấy tài xế!</h4>
+            <div class="ride-info">
+                <h5 class="mb-3">Thông tin tài xế</h5>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Tài xế</label>
+                    <label class="col-sm-9 col-form-label" id="driver-name">Lê Thành Nam </label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Số điện thoại</label>
+                    <label class="col-sm-9 col-form-label" id="driver-phone">fasd jfhasd </label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Dòng xe</label>
+                    <label class="col-sm-9 col-form-label" id="car-model">fasd jfhasd </label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Biển số</label>
+                    <label class="col-sm-9 col-form-label" id="car-number">fasd jfhasd </label>
+                </div>
+
+                <h5 class="mb-3 mt-3">Thông tin chuyến</h5>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Điểm đi</label>
+                    <label class="col-sm-9 col-form-label" id="ride-from">fasd jfhasd </label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Điểm đến</label>
+                    <label class="col-sm-9 col-form-label" id="ride-to">fasd jfhasd gasffsd</label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Số tiền</label>
+                    <label class="col-sm-9 col-form-label" id="ride-amount">123,123 VND</label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Phương thức thanh toán</label>
+                    <label class="col-sm-9 col-form-label" id="payment-method">123,123 VND</label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Ghi chú</label>
+                    <label class="col-sm-9 col-form-label" id="ride-note">
+                        fsahudiof hsadufh úad ádf hjksadlhf jksaldh fjksadf ádf sadjkflsad jkflsad jkflsad jkflsad
+                    </label>
+                </div>
             </div>
         </div>
     </div>
@@ -70,6 +127,43 @@
         </div>
         <div class="cancel-booking mb-5">
             <button class="btn btn-primary" onclick="cancelBooking()"> Hủy chuyến</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Thông tin chuyến đi</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="payment-method">Phương thức thanh toán</label>
+                    <div id="payment-radios">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="payment-method" id="inlineRadio1"
+                                value="CASH" checked>
+                            <label class="form-check-label" for="inlineRadio1">Tiền mặt</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="payment-method" id="inlineRadio2"
+                                value="CARD">
+                            <label class="form-check-label" for="inlineRadio2">Thẻ tín dụng</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="note">Ghi chú</label>
+                    <textarea type="te" id="note" class="form-control" name="note"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="bookCar()" data-bs-dismiss="modal">Tìm xe</button>
+            </div>
         </div>
     </div>
 </div>

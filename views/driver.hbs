@@ -1,0 +1,59 @@
+<div class="row driver-home">
+    <div class="col-sm-6">
+        <form onsubmit="ready(event)" id="driver-ready-form">
+            <div class="text-center">
+                <h4 class="mb-4">Sẵn sàng đón khách?</h4>
+                <button type="submit" class="btn btn-primary mb-3">Sẵn sàng</button>
+            </div>
+        </form>
+        <div id="driver-waiting" style="display: none;">
+            <div class="text-center">
+                <h4 class="mb-4">Đang chờ khách, bạn sẽ nhận được thông báo khi có khách đặt xe!</h4>
+                <button type="button" class="btn btn-primary mb-3" onclick="driverCancelWaiting()">Hủy chờ</button>
+            </div>
+        </div>
+
+        <div id="new-ride-found" style="display: none;">
+            <h3 class="mb-4">Có chuyến đi mới</h3>
+            <div class="ride-info">
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Điểm đi</label>
+                    <label class="col-sm-9 col-form-label" id="ride-from">fasd jfhasd </label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Điểm đến</label>
+                    <label class="col-sm-9 col-form-label" id="ride-to">fasd jfhasd gasffsd</label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Số tiền</label>
+                    <label class="col-sm-9 col-form-label" id="ride-amount">123,123 VND</label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Phương thức thanh toán</label>
+                    <label class="col-sm-9 col-form-label" id="payment-method">123,123 VND</label>
+                </div>
+                <div class="row">
+                    <label class="col-sm-3 col-form-label">Ghi chú</label>
+                    <label class="col-sm-9 col-form-label" id="ride-note">
+                        fsahudiof hsadufh úad ádf hjksadlhf jksaldh fjksadf ádf sadjkflsad jkflsad jkflsad jkflsad
+                    </label>
+                </div>
+            </div>
+            <button id="accept-ride" type="button" class="btn btn-primary mt-3 mb-3" onclick="driverAcceptRide()">Nhận chuyến</button>
+            <button id="complete-ride" class="btn btn-primary mt-3 mb-3" style="display: none" onclick="driverCompleteRide()">Hoàn thành</button>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div id="map" style="width: 100%; height: 500px;"></div>
+    </div>
+
+    <div class="booking-loading" style="display: none;">
+        <div class="loading-container">
+            <div class="loading-circle circle-1"></div>
+            <div class="loading-circle circle-2"></div>
+        </div>
+        <div class="cancel-booking mb-5">
+            <button class="btn btn-primary" onclick="cancelBooking()"> Hủy chuyến</button>
+        </div>
+    </div>
+</div>

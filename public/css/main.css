@@ -1,4 +1,4 @@
-.to-location-box {
+.search-input {
     position: relative;
 }
 
@@ -8,6 +8,8 @@
     position: absolute;
     width: 100%;
     background: white;
+    z-index: 99;
+    box-shadow: 1px 2px 6px 0px #ccc;
 }
 
 .search-suggestion-list .result-item {
