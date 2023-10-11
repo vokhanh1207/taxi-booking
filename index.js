@@ -6,6 +6,7 @@ const expressHandlebars = require("express-handlebars");
 const authController = require("./controller/authController");
 const rideController = require("./controller/rideController");
 const driverController = require("./controller/driverController");
+const userController = require("./controller/userController");
 const passport = require("./controller/passport");
 const flash = require("connect-flash");
 const session = require("express-session");
@@ -56,7 +57,7 @@ app.get("/createTables", (req, res) => {
     res.send("Tables created successfully!");
   });
 });
-
+app.set('rideAndDriverSkipped', new Map());
 app.get("/login", authController.show);
 app.post("/login", authController.login);
 
@@ -65,27 +66,44 @@ app.post("/driver-login", authController.driverLogin);
 
 app.use(authController.isLoggedIn);
 
+// Pages
 app.get("/", (req, res) => {
-  res.render("index", { user: req.user });
+  res.render("index", { 
+    user: req.user,
+    userStringified: JSON.stringify(req.user),
+  });
 });
 
-app.post("/book", rideController.book);
-app.get("/book/:rideId", rideController.getBooking);
-app.post("/cancel", rideController.cancel);
-
-// driver
 app.get("/driver", (req, res) => {
+  if (!req.user.idNumber) {
+    return res.redirect("/");
+  }
+
   res.render("driver", {
     user: req.user,
+    userStringified: JSON.stringify(req.user),
     isDriver: true,
   });
 });
 
+
+// APIs
+app.post("/book", rideController.book);
+app.get("/book/:rideId", rideController.getBooking);
+app.post("/cancel", rideController.cancel);
+app.get("/user/ongoingRide", userController.ongoingRide);
+app.get("/user/getDrivers", userController.getDrivers);
+
+// driver
 app.post("/driver/ready", driverController.ready);
 app.get("/driver/checkBooking", driverController.checkBooking);
 app.post("/driver/cancelWaiting", driverController.cancelWaiting);
+app.post("/driver/cancelRide", driverController.cancelRide);
 app.post("/driver/acceptRide", driverController.acceptRide);
+app.post("/driver/confirmPicking", driverController.confirmPicking);
 app.post("/driver/complete", driverController.complete);
+app.post("/driver/skipRide", driverController.skipRide);
+app.get("/driver/currentRide", driverController.currentRide);
 app.get("/driver/driver-complete", (req, res) => {
     res.render("complete-page")
 });

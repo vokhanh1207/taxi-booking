@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     isAdmin: DataTypes.BOOLEAN,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
+    status: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'User',

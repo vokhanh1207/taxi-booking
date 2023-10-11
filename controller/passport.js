@@ -15,14 +15,14 @@ passport.deserializeUser(async (user, done) => {
   try {
     let currentUser = null;
     const query = {
-      attributes: ["id", "email", "firstName", "lastName", "mobile"],
+      attributes: ["id", "email", "firstName", "lastName", "mobile", "status"],
       where: { id: user.id },
     };
 
     // if user is driver
     console.log('deserializeUser', user);
-    if (user.status) {
-      query.attributes.push("status");
+    if (user.idNumber) {
+      query.attributes.push("idNumber", "currentLocation");
       currentUser = await models.Driver.findOne(query);
     } else {
       currentUser = await models.User.findOne(query);
@@ -103,7 +103,9 @@ passport.use(
               "lastName",
               "mobile",
               "password",
-              "status"
+              "status",
+              "idNumber",
+              "currentLocation",
             ],
             where: { email: email },
           });

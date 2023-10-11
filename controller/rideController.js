@@ -2,7 +2,7 @@
 
 const controller = {};
 const sequelize = require("sequelize");
-const {RIDE_STATUS} = require("./constants");
+const {RIDE_STATUS, USER_STATUS} = require("./constants");
 const models = require("../models");
 const passport = require("./passport");
 
@@ -21,9 +21,17 @@ controller.book = async (req, res) => {
     paymentMethod: req.body.paymentMethod,
   };
 
-  console.log(rideOjb);
-
   const newRide = await models.Ride.create(rideOjb);
+
+  const user = await models.User.findOne({
+    where: {
+      id: req.user.id,
+    },
+  });
+  user.status = USER_STATUS.Waiting;
+  user.save();
+  req.app.get('rideAndDriverSkipped').set(newRide.id, []);
+
   return res.json({
     success: true,
     rideId: newRide.id,

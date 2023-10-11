@@ -1,5 +1,5 @@
 <div class="row driver-home">
-    <div class="col-sm-6">
+    <div class="col-sm-6 mb-4">
         <form onsubmit="ready(event)" id="driver-ready-form">
             <div class="text-center">
                 <h4 class="mb-4">Sẵn sàng đón khách?</h4>
@@ -12,48 +12,103 @@
                 <button type="button" class="btn btn-primary mb-3" onclick="driverCancelWaiting()">Hủy chờ</button>
             </div>
         </div>
-
-        <div id="new-ride-found" style="display: none;">
-            <h3 class="mb-4">Có chuyến đi mới</h3>
-            <div class="ride-info">
-                <div class="row">
-                    <label class="col-sm-3 col-form-label">Điểm đi</label>
-                    <label class="col-sm-9 col-form-label" id="ride-from">fasd jfhasd </label>
+         <div id="driver-picking" style="display: none;">
+            <div class="text-center">
+                <h4 class="mb-4">Đón khách tại: </h4>
+                <div class="mt-3 mb-3">
+                    <i class="ride-from"></i>
                 </div>
-                <div class="row">
-                    <label class="col-sm-3 col-form-label">Điểm đến</label>
-                    <label class="col-sm-9 col-form-label" id="ride-to">fasd jfhasd gasffsd</label>
-                </div>
-                <div class="row">
-                    <label class="col-sm-3 col-form-label">Số tiền</label>
-                    <label class="col-sm-9 col-form-label" id="ride-amount">123,123 VND</label>
-                </div>
-                <div class="row">
-                    <label class="col-sm-3 col-form-label">Phương thức thanh toán</label>
-                    <label class="col-sm-9 col-form-label" id="payment-method">123,123 VND</label>
-                </div>
-                <div class="row">
-                    <label class="col-sm-3 col-form-label">Ghi chú</label>
-                    <label class="col-sm-9 col-form-label" id="ride-note">
-                        fsahudiof hsadufh úad ádf hjksadlhf jksaldh fjksadf ádf sadjkflsad jkflsad jkflsad jkflsad
-                    </label>
-                </div>
+                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#driver-cancel-ride">Hủy chuyến</button>
+                <button type="button" class="btn btn-primary" onclick="driverConfirmPicking()">Đã đón khách</button>
             </div>
-            <button id="accept-ride" type="button" class="btn btn-primary mt-3 mb-3" onclick="driverAcceptRide()">Nhận chuyến</button>
-            <button id="complete-ride" class="btn btn-primary mt-3 mb-3" style="display: none" onclick="driverCompleteRide()">Hoàn thành</button>
+        </div>
+        <div id="driver-riding" style="display: none;">
+            <div class="text-center">
+                <h4 class="mb-4">Nhấn hoàn thành sau khi hoàn thành chuyến đi!</h4>
+                <button type="button" class="btn btn-primary mb-3" onclick="driverCompleteRide()">Hoàn thành</button>
+            </div>
+        </div>
+        <div id="driver-complete" style="display: none;">
+            <div class="text-center">
+                <h4 class="mb-4">Chúc mừng bạn đã hoàn thành chuyến đi</h4>
+                <div class="mb-4">Số tiền: <strong id="complete-amount"></strong></div>
+                <button type="button" class="btn btn-primary mb-3" onclick="driverCompleteRideAndBack()">Tiếp tục tìm chuyến</button>
+            </div>
         </div>
     </div>
     <div class="col-sm-6">
         <div id="map" style="width: 100%; height: 500px;"></div>
     </div>
+</div>
 
-    <div class="booking-loading" style="display: none;">
-        <div class="loading-container">
-            <div class="loading-circle circle-1"></div>
-            <div class="loading-circle circle-2"></div>
+<!-- Modal -->
+<div class="modal fade" id="new-ride-found" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Có khách mới</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="countdown">
+                        <div id="countdown-number">15</div>
+                        <svg>
+                            <circle r="18" cx="20" cy="20"></circle>
+                        </svg>
+                    </div>
+                </div>
+                <div class="ride-info">
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Điểm đi</label>
+                        <label class="col-sm-9 col-form-label ride-from" >From</label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Điểm đến</label>
+                        <label class="col-sm-9 col-form-label" id="ride-to">To</label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Số tiền</label>
+                        <label class="col-sm-9 col-form-label" id="ride-amount">123,123 VND</label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Phương thức thanh toán</label>
+                        <label class="col-sm-9 col-form-label" id="payment-method">123,123 VND</label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Ghi chú</label>
+                        <label class="col-sm-9 col-form-label" id="ride-note">
+                            Note
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="driverSkipRide()" data-bs-dismiss="modal">Từ chối</button>
+                <button type="button" class="btn btn-primary" onclick="driverAcceptRide()" data-bs-dismiss="modal">Nhận khách </button>
+            </div>
         </div>
-        <div class="cancel-booking mb-5">
-            <button class="btn btn-primary" onclick="cancelBooking()"> Hủy chuyến</button>
+    </div>
+</div>
+
+
+<!-- Modal Cancel Ride-->
+<div class="modal fade" id="driver-cancel-ride" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Xác nhận hủy chuyến </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc bạn muốn hủy chuyến đi?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="driverCancelRide()" data-bs-dismiss="modal">Hủy chuyến</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tiếp tục chuyến đi</button>
+            </div>
         </div>
     </div>
 </div>

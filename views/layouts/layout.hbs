@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,6 +10,14 @@
   <link href="/css/main.css" rel="stylesheet">
   <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    {{#if userStringified}}
+      let beUser = {{{userStringified}}};
+    {{else}}
+      let beUser = null;
+    {{/if}}
+
+  </script>
 </head>
 
 <body>
@@ -20,9 +28,12 @@
       {{#if user}}
       <div class="dropdown">
         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Xin chào{{#if user.status}} tài xế{{/if}}: {{user.lastName}} {{user.firstName}}
+          Xin chào{{#if user.idNumber}} tài xế{{/if}}: {{user.lastName}} {{user.firstName}}
         </button>
         <ul class="dropdown-menu">
+          {{#if user.isAdmin}}
+            <li><a class="dropdown-item" href="/admin/kyc">Duyệt đăng ký</a></li>
+          {{/if}}
           {{#if user.isDriver}}
             <li><a class="dropdown-item" href="/driver/rides">Lịch sử chạy</a></li>
           {{else}}
@@ -47,9 +58,10 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
   <script
-    src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap&v=weekly&libraries=places"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwlMf23bmsQEpSwpUfOmW8eQIowSI3Ce4&callback=initMap&v=weekly&libraries=places"
     defer></script>
 
+  <script src="/js/utils.js"></script>
   <script src="/js/main.js"></script>
   <script src="/js/jquery-ui.min.js"></script>
 </body>
