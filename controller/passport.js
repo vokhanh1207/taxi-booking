@@ -25,6 +25,7 @@ passport.deserializeUser(async (user, done) => {
       query.attributes.push("idNumber", "currentLocation");
       currentUser = await models.Driver.findOne(query);
     } else {
+      query.attributes.push("isAdmin");
       currentUser = await models.User.findOne(query);
     }
     done(null, currentUser);

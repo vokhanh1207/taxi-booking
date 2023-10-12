@@ -4,6 +4,9 @@ const controller = {};
 const passport = require('./passport');
 
 controller.show = (req, res) => {
+    if (req.user) {
+        return res.redirect('/');
+    }
     res.render('login', { loginMessage: req.flash('loginMessage') });
 };
 
@@ -57,11 +60,13 @@ controller.isLoggedIn = (req, res, next) => {
     res.redirect('/login');
 };
 
-// controller.isDriverLoggedIn = (req, res, next) => {
-//     if (req.isAuthenticated()) {
-//         return next();
-//     }
-//     res.redirect('/driver-login');
-// };
+controller.logout = (req, res) => {
+    req.logout((error) => {
+        if (error) {
+            console.log('Logout error: ', error);
+        }
+        res.redirect('/login');
+    });
+};
 
 module.exports = controller;

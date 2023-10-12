@@ -10,7 +10,18 @@ const userController = require("./controller/userController");
 const passport = require("./controller/passport");
 const flash = require("connect-flash");
 const session = require("express-session");
+const { RIDE_STATUS, DRIVER_STATUS, USER_STATUS } = require("./controller/constants");
+const Handlebars = require("handlebars");
 
+Handlebars.registerHelper('ifeq', function (a, b, options) {
+  if (a == b) { return options.fn(this); }
+  return options.inverse(this);
+});
+
+Handlebars.registerHelper('ifnoteq', function (a, b, options) {
+  if (a != b) { return options.fn(this); }
+  return options.inverse(this);
+});
 // cau hinh public folder
 // app.use(express.static('views'));
 app.use(express.static(__dirname + "/assets"));
@@ -63,6 +74,7 @@ app.post("/login", authController.login);
 
 app.get("/driver-login", authController.showDriverLogin);
 app.post("/driver-login", authController.driverLogin);
+app.get("/logout", authController.logout);
 
 app.use(authController.isLoggedIn);
 
@@ -83,6 +95,46 @@ app.get("/driver", (req, res) => {
     user: req.user,
     userStringified: JSON.stringify(req.user),
     isDriver: true,
+  });
+});
+
+app.get("/admin/kyc", async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.redirect("/");
+  }
+  let models = require("./models");
+  const drivers = await models.Driver.findAll({
+    where: {
+      status: DRIVER_STATUS.Pending,
+    },
+  });
+
+  res.render("kyc", {
+    user: req.user,
+    drivers
+  });
+});
+
+app.get("/admin/kyc/:id", async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.redirect("/");
+  }
+  let models = require("./models");
+  const approve = req.query.approve;
+
+  const driver = await models.Driver.findOne({
+    where: {
+      id: req.params.id,
+    },
+  });
+  if (approve) {
+    driver.status = DRIVER_STATUS.Inactive;
+    await driver.save();
+  }
+
+  res.render("kyc-details", {
+    user: req.user,
+    driver
   });
 });
 

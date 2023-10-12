@@ -23,8 +23,11 @@
 <body>
   <header>
     <div class="text-center pt-3 pb-3">
-      <img src="/images/logo_khtn.svg" alt="logo" width="100px" height="100px">
+      <a href="{{#if user.idNumber}}./driver{{else}}./{{/if}}">
+        <img src="/images/logo_khtn.svg" alt="logo" width="100px" height="100px">
+      </a>
       <h5>Taxi booking app</h5>
+      
       {{#if user}}
       <div class="dropdown">
         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -39,7 +42,7 @@
           {{else}}
             <li><a class="dropdown-item" href="#">Lịch sử đặt xe</a></li>
           {{/if}}
-          <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+          <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
         </ul>
       </div>
       {{/if}}
@@ -58,7 +61,7 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
   <script
-    src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap&v=weekly&libraries=places"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwlMf23bmsQEpSwpUfOmW8eQIowSI3Ce4&callback=initMap&v=weekly&libraries=places"
     defer></script>
 
   <script src="/js/utils.js"></script>

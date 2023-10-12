@@ -1,0 +1,35 @@
+<div class="kyc-view">
+    {{#if drivers}}
+    <h4>Duyệt tài xế đăng ký mới</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Họ</th>
+                <th scope="col">Tên</th>
+                <th scope="col">Email</th>
+                <th scope="col">Điện thoại</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each drivers}}
+            <tr>
+                <td scope="row" class="align-middle">{{@index}}</td>
+                <td class="align-middle">{{lastName}}</td>
+                <td class="align-middle">{{firstName}}</td>
+                <td class="align-middle">{{email}}</td>
+                <td class="align-middle">{{mobile}}</td>
+                <td class="align-middle text-end">
+                    <a href="/admin/kyc/{{id}}" class="btn btn-primary">Chi tiết <b>></b></a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    {{else}}
+    <div class="alert alert-primary" role="alert">
+        Không có tài xế nào cần duyệt
+    </div>
+    {{/if}}
+</div>

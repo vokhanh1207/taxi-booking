@@ -1,0 +1,97 @@
+<div class="kyc-details">
+    <div class="row">
+        <div class="col-sm-6">
+            <h4>Duyệt tài xế đăng ký mới</h4>
+        </div>
+        <div class="col-sm-6 text-end">
+            {{#ifeq driver.status "PENDING"}}
+            <a href="?approve=true" class="btn btn-primary">Duyệt</a>
+            {{/ifeq}}
+
+            {{#ifnoteq driver.status "PENDING"}}
+            <span class="fs-6 badge bg-success text-wrap">Đã duyệt</span>
+            {{/ifnoteq}}
+        </div>
+    </div>
+    <div class="driver-details">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="firstName">Họ</label>
+                    <input type="text" class="form-control" name="lastName" value="{{driver.lastName}}" />
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="lastName">Tên</label>
+                    <input type="text" id="firstName" class="form-control" name="firstName"
+                        value="{{driver.firstName}}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" class="form-control" name="email" value="{{driver.email}}" />
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="mobile">Điện thoại</label>
+                    <input type="text" id="mobile" class="form-control" name="mobile" value="{{driver.mobile}}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="idNumber">Số căn cước </label>
+                    <input type="email" id="idNumber" class="form-control" name="idNumber" value="{{driver.idNumber}}" />
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="createdAt">Ngày tạo</label>
+                    <input type="text" id="createdAt" class="form-control" name="createdAt" value="{{driver.createdAt}}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="cardIdFront">Căn cước mặt trước</label>
+                    <div class="image-preview">
+                        <img class="img-fluid" src="{{driver.cardIdFront}}" alt="Căn cước mặt trước" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="cardIdFront">Căn cước mặt sau</label>
+                    <div class="image-preview">
+                        <img class="img-fluid" src="{{driver.cardIdBack}}" alt="Căn cước mặt sau" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="cardIdFront">Bằng lái mặt trước </label>
+                    <div class="image-preview">
+                        <img class="img-fluid" src="{{driver.driverLicenseFront}}" alt="Bằng lái mặt trước" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="cardIdFront">Bằng lái mặt sau</label>
+                    <div class="image-preview">
+                        <img class="img-fluid" src="{{driver.driverLicenseBack}}" alt="Bằng lái mặt sau" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
