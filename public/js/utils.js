@@ -23,7 +23,7 @@ function formatCurrency(total) {
 }
 
 function fromTextToLatLng(text) {
-  const [lat, lng] = text.split(",");
+  const [lat, lng] = (text || '').split(",");
   return {
     lat: Number(lat),
     lng: Number(lng),

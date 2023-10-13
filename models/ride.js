@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     note: DataTypes.STRING,
     taxiType: DataTypes.STRING,
     paymentMethod: DataTypes.STRING,
+    distance: DataTypes.DECIMAL,
   }, {
     sequelize,
     modelName: 'Ride',

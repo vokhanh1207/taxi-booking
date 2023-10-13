@@ -19,6 +19,7 @@ controller.book = async (req, res) => {
     amount: req.body.amount,
     taxiType: req.body.taxiType,
     paymentMethod: req.body.paymentMethod,
+    distance: req.body.distance,
   };
 
   const newRide = await models.Ride.create(rideOjb);

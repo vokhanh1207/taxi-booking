@@ -1,8 +1,6 @@
 //https://developers.google.com/maps/documentation/javascript/examples/place-details
 let user = beUser || null;
 let map = null;
-let fromMarker = null;
-let toMarker = null;
 
 var directionsService = null;
 var directionsRenderer = null;
@@ -17,19 +15,24 @@ const currentUser = {
   lat: null,
   lng: null,
 };
+const bookingInfo = {
+  distance: 0,
+  fromMarker: null,
+  toMarker: null,
+};
 
 let driverMarkers = [];
 const onMapReady = new Subject();
 
 // check ongoing ride for normal users
 if (user && !user.idNumber && !user.admin) {
-  checkOngoingRide();
+  userCheckOnload();
 }
 if (user && user.idNumber) {
-  driverCheckCurrentStatus();
+  driverCheckOnLoad();
 }
 
-function driverCheckCurrentStatus() {
+function driverCheckOnLoad() {
   fetch(`${window.location.origin}/driver/currentRide`, {
     method: "GET",
     headers: {
@@ -45,7 +48,7 @@ function driverCheckCurrentStatus() {
           driverCheckBooking();
         }
 
-        if (res.ride && currentDriver.ride?.id != res.ride.id) {
+        if (res.ride) {
           onMapReady.subscribe(() => {
             setRouteOnMap(res.ride.fromLocation, res.ride.toLocation);
           });
@@ -103,8 +106,8 @@ function clearDriverMarkers() {
 }
 
 function clearFromToMarkers() {
-  fromMarker?.setMap(null);
-  toMarker?.setMap(null);
+  bookingInfo.fromMarker?.setMap(null);
+  bookingInfo.toMarker?.setMap(null);
 }
 
 function initMap() {
@@ -122,15 +125,15 @@ function initMap() {
 
     onMapReady.next();
 
-    fromMarker = new google.maps.Marker({
+    bookingInfo.fromMarker = new google.maps.Marker({
       position: {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       },
     });
-    toMarker = new google.maps.Marker();
+    bookingInfo.toMarker = new google.maps.Marker();
 
-    fromMarker.setMap(map);
+    bookingInfo.fromMarker.setMap(map);
 
     getDrivers();
 
@@ -199,7 +202,7 @@ const debounceSearchPlaces = debounce(searchPlaces, 500);
 
 window.initMap = initMap;
 
-function checkOngoingRide() {
+function userCheckOnload() {
   fetch(`${window.location.origin}/user/ongoingRide`, {
     method: "GET",
     headers: {
@@ -215,6 +218,11 @@ function checkOngoingRide() {
         }
 
         if (res.ride) {
+          $('#fromLocation').val(res.ride.fromAddress);
+          $('#toLocation').val(res.ride.toAddress);
+          onMapReady.subscribe(() => {
+            setRouteOnMap(res.ride.fromLocation, res.ride.toLocation);
+          });
           checkBooking(res.ride.id);
           // onMapReady.subscribe(() => {
           //   console.log("fasdf");
@@ -261,6 +269,7 @@ function addjustZoom(markers = []) {
 
 const setRouteOnMap = (fromLatLng = "", toLatLng = "", options = {}) => {
   try {
+    clearRouteOnMap();
     const localMap = map || window.map;
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer(options);
@@ -303,7 +312,7 @@ function onclickSearch(e) {
   $(e.target).closest(".search-suggestion-list").hide();
 
   const isFrom = searchEl.hasClass("from-location-box");
-  const marker = isFrom ? fromMarker : toMarker;
+  const marker = isFrom ? bookingInfo.fromMarker : bookingInfo.toMarker;
 
   if (marker) {
     marker.setPosition({ lat, lng });
@@ -311,7 +320,7 @@ function onclickSearch(e) {
 
   marker.setMap(map);
 
-  addjustZoom([fromMarker, toMarker]);
+  addjustZoom([bookingInfo.fromMarker, bookingInfo.toMarker]);
 }
 
 function checkPrice(e) {
@@ -319,8 +328,8 @@ function checkPrice(e) {
 
   directionsService = new google.maps.DirectionsService();
 
-  const start = fromMarker.getPosition();
-  const end = toMarker.getPosition();
+  const start = bookingInfo.fromMarker.getPosition();
+  const end = bookingInfo.toMarker.getPosition();
   directionsRenderer.setMap(map);
 
   var request = {
@@ -331,20 +340,20 @@ function checkPrice(e) {
 
   directionsService.route(request, function (result, status) {
     if (status == "OK") {
-      console.log("result", result);
       $("#fromLocation").val(result.routes[0].legs[0].start_address);
       const distance = result.routes[0].legs[0].distance.value;
-      const roundedDistance = Math.ceil(distance / 1000) * 1000;
+      bookingInfo.distance = distance;
+      const roundedDistance = Math.ceil(distance / 1000);
 
       // calculate price
       // 4 seat: 14k/km
       // 4 seat VIP: 16k/km
       // 7 seat: 17k/km
       // 7 seat VIP: 19k/km
-      const price4Seat = roundedDistance * 14;
-      const price4SeatVIP = roundedDistance * 16;
-      const price7Seat = roundedDistance * 17;
-      const price7SeatVIP = roundedDistance * 19;
+      const price4Seat = roundedDistance * 14000;
+      const price4SeatVIP = roundedDistance * 16000;
+      const price7Seat = roundedDistance * 17000;
+      const price7SeatVIP = roundedDistance * 19000;
 
       $("#price-4-seat")
         .html(formatCurrency(price4Seat))
@@ -375,16 +384,16 @@ function checkPrice(e) {
 function mockPrices() {
   // const distance = result.routes[0].legs[0].distance.value;
   // const roundedDistance = Math.ceil(distance / 1000) * 1000;
-  const roundedDistance = 5000;
+  const roundedDistance = 5;
   // calculate price
   // 4 seat: 14k/km
   // 4 seat VIP: 16k/km
   // 7 seat: 17k/km
   // 7 seat VIP: 19k/km
-  const price4Seat = roundedDistance * 14;
-  const price4SeatVIP = roundedDistance * 16;
-  const price7Seat = roundedDistance * 17;
-  const price7SeatVIP = roundedDistance * 19;
+  const price4Seat = roundedDistance * 14000;
+  const price4SeatVIP = roundedDistance * 16000;
+  const price7Seat = roundedDistance * 17000;
+  const price7SeatVIP = roundedDistance * 19000;
 
   $("#price-4-seat")
     .html(formatCurrency(price4Seat))
@@ -423,16 +432,17 @@ function bookCar() {
   const body = {
     fromAddress: $("#fromLocation").val() || "103 Nguyễn Thị Minh Khai, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam",
     toAddress: $("#toLocation").val() || '233 Điện Biên Phủ, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam',
-    fromLocation: `${fromMarker?.getPosition()?.lat() || 10.713502}, ${
-      fromMarker?.getPosition()?.lng() || 106.610019
+    fromLocation: `${bookingInfo.fromMarker?.getPosition()?.lat() || 10.713502}, ${
+      bookingInfo.fromMarker?.getPosition()?.lng() || 106.610019
     }`,
-    toLocation: `${toMarker?.getPosition()?.lat() || 10.787088}, ${
-      toMarker?.getPosition()?.lng() || 106.698402
+    toLocation: `${bookingInfo.toMarker?.getPosition()?.lat() || 10.787088}, ${
+      bookingInfo.toMarker?.getPosition()?.lng() || 106.698402
     }`,
     amount: selectedRide.attr("data-price"),
     taxiType: selectedRide.attr("data-taxi-type"),
     note: $("#note").val(),
     paymentMethod: $("#payment-radios").find("input:checked").val(),
+    distance: bookingInfo.distance,
   };
 
   fetch(`${window.location.origin}/book`, {
@@ -507,10 +517,13 @@ function getBooking(id) {
         $(".booking-area").hide();
         $(".found-driver").show();
 
-        $("#driver-name").html(res.driver.name);
+        $("#driver-name").html(`${res.driver.lastName} ${res.driver.firstName}`);
         $("#driver-phone").html(res.driver.mobile);
-        $("#car-model").html(res.car.model);
-        $("#car-number").html(res.car.registrationNumber);
+    
+        if (res.car) {
+          $("#car-model").html(res.car.model);
+          $("#car-number").html(res.car.registrationNumber);
+        }
 
         $(".ride-from").html(res.ride.fromAddress);
         $("#ride-to").html(res.ride.toAddress);
@@ -520,6 +533,10 @@ function getBooking(id) {
 
         currentRide.driver = res.driver;
         currentRide.ride = res.ride;
+
+        if(!currentRide.driver.currentLocation) {
+          return;
+        }
 
         clearRouteOnMap();
         setRouteOnMap(
@@ -549,6 +566,7 @@ function getBooking(id) {
       if (res.success && res.ride?.status == "COMPLETED") {
         $(".user-riding").hide();
         $(".user-complete").show();
+        clearRouteOnMap();
         clearInterval(currentRide.checkBookingInterval);
       }
 
@@ -567,6 +585,8 @@ function getBooking(id) {
           return;
         }
         $(".booking-loading").show();
+        $(".booking-area").show();
+        $(".found-driver").hide();
         $("#fromLocation").val(res.ride.fromAddress);
         $("#toLocation").val(res.ride.toAddress);
       }
@@ -575,7 +595,6 @@ function getBooking(id) {
     });
 }
 function cancelBooking() {
-  console.log('currentride', currentRide);
   fetch(`${window.location.origin}/cancel`, {
     method: "POST",
     headers: {
@@ -584,6 +603,7 @@ function cancelBooking() {
     body: JSON.stringify({ rideId: currentRide.ride.id }),
   }).then(() => {
     $(".booking-loading").hide();
+    clearRouteOnMap();
     clearInterval(currentRide.checkBookingInterval);
   });
 }
@@ -636,6 +656,7 @@ function openFoundRideModel() {
   clearInterval(currentDriver.checkBookingInterval);
   $(".ride-from").html(currentDriver.ride.fromAddress);
   $("#ride-to").html(currentDriver.ride.toAddress);
+  $("#ride-distance").html(Math.ceil(currentDriver.ride.distance / 100) / 10 + "km");
   $("#ride-amount").html(formatCurrency(currentDriver.ride.amount));
   $("#payment-method").html(currentDriver.ride.paymentMethod);
   $("#ride-note").html(currentDriver.ride.note);
@@ -773,6 +794,8 @@ function driverCompleteRide() {
         $("#driver-riding").hide();
         $("#driver-complete").show();
         $("#complete-amount").text(formatCurrency(currentDriver.ride.amount));
+
+        clearRouteOnMap();
       }
     });
 }
