@@ -68,11 +68,15 @@ function driverCheckCurrentStatus() {
 }
 
 function addDriverMarkers(map, drivers = []) {
-  drivers.forEach((driver) => {
-    const marker = makeMarker(driver, "Driver");
-    marker.setMap(map);
-    driverMarkers.push(marker);
-  });
+  try {
+    drivers.forEach((driver) => {
+      const marker = makeMarker(driver, "Driver");
+      marker.setMap(map);
+      driverMarkers.push(marker);
+    });
+  } catch (error) {
+    console.log("error", error);
+  }
 }
 
 function makeMarker(
@@ -256,7 +260,8 @@ function addjustZoom(markers = []) {
 }
 
 const setRouteOnMap = (fromLatLng = "", toLatLng = "", options = {}) => {
-  const localMap = map || window.map;
+  try {
+    const localMap = map || window.map;
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer(options);
 
@@ -278,6 +283,10 @@ const setRouteOnMap = (fromLatLng = "", toLatLng = "", options = {}) => {
       directionsRenderer.setDirections(result);
     }
   });
+  } catch (error) {
+    console.log('error', error);
+  }
+  
 };
 
 function onclickSearch(e) {
@@ -412,8 +421,8 @@ function selectRide(e) {
 function bookCar() {
   const selectedRide = $("#price-section").find(".row.selected");
   const body = {
-    fromAddress: $("#fromLocation").val(),
-    toAddress: $("#toLocation").val(),
+    fromAddress: $("#fromLocation").val() || "103 Nguyễn Thị Minh Khai, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam",
+    toAddress: $("#toLocation").val() || '233 Điện Biên Phủ, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam',
     fromLocation: `${fromMarker?.getPosition()?.lat() || 10.713502}, ${
       fromMarker?.getPosition()?.lng() || 106.610019
     }`,
@@ -436,16 +445,26 @@ function bookCar() {
     .then((res) => res.json())
     .then((res) => {
       if (res.success) {
-        currentRide.id = res.rideId;
-        checkBooking(res.rideId);
+        currentRide.ride = res.ride;
+        const rideId = res.ride.id;
+        if (user?.isAdmin) {
+          $('.admin-last-booking-id').text(rideId);
+          $('.admin-booking-success').fadeIn();
+          $('.price-section').hide();
+          setTimeout(() => { $('.admin-booking-success').fadeOut(); }, 4000);
+          clearFromToMarkers();
+          return;
+        }
+
+        checkBooking(rideId);
+        $(".booking-loading").show();
       }
     });
 
-  $(".booking-loading").show();
 }
 
 function userCheckRide() {
-  fetch(`${window.location.origin}/checkRide/${currentRide.id}`, {
+  fetch(`${window.location.origin}/checkRide/${currentRide.ride.id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -461,7 +480,7 @@ function userCheckRide() {
 function checkBooking(id) {
   getBooking(id);
   currentRide.checkBookingInterval = setInterval(() => {
-    // getBooking(id);
+    getBooking(id);
   }, 3000);
 }
 
@@ -544,6 +563,9 @@ function getBooking(id) {
       }
 
       if (res.success && res.ride?.status == "FINDING") {
+        if(user?.isAdmin) {
+          return;
+        }
         $(".booking-loading").show();
         $("#fromLocation").val(res.ride.fromAddress);
         $("#toLocation").val(res.ride.toAddress);
@@ -553,12 +575,13 @@ function getBooking(id) {
     });
 }
 function cancelBooking() {
+  console.log('currentride', currentRide);
   fetch(`${window.location.origin}/cancel`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ rideId: currentRide.id }),
+    body: JSON.stringify({ rideId: currentRide.ride.id }),
   }).then(() => {
     $(".booking-loading").hide();
     clearInterval(currentRide.checkBookingInterval);
@@ -726,12 +749,12 @@ function driverConfirmPicking() {
     .then((res) => res.json())
     .then((res) => {
       if (res.success) {
+        $("#driver-picking").hide();
+        $("#driver-riding").show();
         setRouteOnMap(
           currentDriver.ride.fromLocation,
           currentDriver.ride.toLocation
         );
-        $("#driver-picking").hide();
-        $("#driver-riding").show();
       }
     });
 }
@@ -755,7 +778,11 @@ function driverCompleteRide() {
 }
 
 function clearRouteOnMap() {
-  directionsRenderer.set("directions", null);
+  try {
+    directionsRenderer.set("directions", null);
+  } catch (error) {
+    console.log('error', error);
+  }
 }
 function driverCompleteRideAndBack() {
   driverCheckBooking();

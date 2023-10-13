@@ -1,10 +1,17 @@
+<div class="alert alert-success admin-booking-success" role="alert" style="
+    position: fixed;
+    top: 30px;
+    right: 30px; 
+    display: none">
+    Chuyến đi được tạo thành công, mã chuyến <b class="admin-last-booking-id">12</b>
+</div>
 <div class="row booking-view">
     <div class="col-sm-6 mb-4">
         <div class="booking-area">
             <form onsubmit="checkPrice(event)">
                 <div class="mb-3 row">
-                    <label for="fromLocation" class="col-sm-2 col-form-label">Điểm đi</label>
-                    <div class="col-sm-10">
+                    <label for="fromLocation" class="col-sm-3 col-form-label">Điểm đi</label>
+                    <div class="col-sm-9">
                         <div class="from-location-box search-input">
                             <div class="input">
                                 <input autocomplete="off" type="text" class="form-control" id="fromLocation"
@@ -16,8 +23,8 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label for="toLocation" class="col-sm-2 col-form-label">Điểm đến</label>
-                    <div class="col-sm-10">
+                    <label for="toLocation" class="col-sm-3 col-form-label">Điểm đến</label>
+                    <div class="col-sm-9">
                         <div class="search-input to-location-box">
                             <div class="input">
                                 <input autocomplete="off" type="text" class="form-control" id="toLocation"
@@ -30,7 +37,7 @@
                 </div>
 
                 <div class="mb-3 row">
-                    <div class="col-sm-10 offset-sm-2">
+                    <div class="col-sm-9 offset-sm-3">
                         <button type="submit" class="btn btn-primary mb-3">Kiểm tra</button>
                     </div>
                 </div>

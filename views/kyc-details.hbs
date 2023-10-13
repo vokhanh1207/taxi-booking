@@ -14,6 +14,7 @@
         </div>
     </div>
     <div class="driver-details">
+        <h5>Thông tin tài xế</h5>
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-outline mb-4">
@@ -90,6 +91,46 @@
                     <div class="image-preview">
                         <img class="img-fluid" src="{{driver.driverLicenseBack}}" alt="Bằng lái mặt sau" />
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="car-details">
+        <h5>Thông tin xe</h5>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="carModel">Model</label>
+                    <input type="text" class="form-control" name="carModel" value="{{car.model}}" />
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="carRegistrationNumber">Tên</label>
+                    <input type="text" id="carRegistrationNumber" class="form-control" name="carRegistrationNumber"
+                        value="{{car.registrationNumber}}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="carColor">Màu</label>
+                    <input type="text" id="carColor" class="form-control" name="carColor" value="{{car.color}}" />
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="carSeats">Số ghế</label>
+                    <input type="text" id="carSeats" class="form-control" name="carSeats" value="{{car.seats}}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-outline mb-4">
+                    <label class="form-label" for="taxiType">Loại dịch vụ</label>
+                    <input type="text" id="taxiType" class="form-control" name="taxiType" value="{{car.taxiType}}" />
                 </div>
             </div>
         </div>

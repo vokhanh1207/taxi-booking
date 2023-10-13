@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
       Ride.belongsTo(models.Driver, {
         foreignKey: 'driverId'
       });
+      Ride.hasMany(models.Payment, {
+        foreignKey: 'rideId'
+      });
     }
   }
   Ride.init({

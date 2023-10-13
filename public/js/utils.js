@@ -31,16 +31,16 @@ function fromTextToLatLng(text) {
 }
 
 class Subject {
-    callback = [];
+    callbacks = [];
     constructor() {}
 
     subscribe(callback) {
-        this.callback.push(callback);
+        this.callbacks.push(callback);
     }
 
     next(data) {
-        while(this.callback.length > 0) {
-            this.callback.pop()(data);
-        }
+      this.callbacks.forEach((callback) => {
+        callback(data);
+      });
     }
 }

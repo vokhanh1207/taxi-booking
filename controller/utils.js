@@ -25,6 +25,10 @@ Utils.fromTextToLatLng = (text = '') => {
   };
 }
 
+Utils.numberWithCommas = (x) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 // Converts numeric degrees to radians
 function toRad(Value) {
   return (Value * Math.PI) / 180;

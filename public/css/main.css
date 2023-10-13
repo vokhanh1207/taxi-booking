@@ -123,3 +123,23 @@
       stroke-dashoffset: 113px;
     }
   }
+.status-bg-FINDING {
+    color: #000!important;
+    background-color: RGBA(var(--bs-warning-rgb),var(--bs-bg-opacity,1))!important;
+}
+.status-bg-PICKING {
+    color: #000!important;
+    background-color: RGBA(var(--bs-info-rgb),var(--bs-bg-opacity,1))!important;
+}
+.status-bg-RIDING {
+    color: #fff!important;
+    background-color: RGBA(var(--bs-primary-rgb),var(--bs-bg-opacity,1))!important;
+}
+.status-bg-CANCELED {
+    color: #fff!important;
+    background-color: RGBA(var(--bs-danger-rgb),var(--bs-bg-opacity,1))!important;
+}
+.status-bg-COMPLETED {
+    color: #fff!important;
+    background-color: RGBA(var(--bs-success-rgb),var(--bs-bg-opacity,1))!important;
+}

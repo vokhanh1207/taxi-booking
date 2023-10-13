@@ -175,6 +175,7 @@ controller.acceptRide = async (req, res) => {
 
   ride.driverId = driverId;
   ride.status = RIDE_STATUS.Picking;
+  ride.startTime = sequelize.fn("NOW");
   await ride.save();
 
   driver.status = DRIVER_STATUS.Riding;
@@ -319,10 +320,21 @@ controller.complete = async (req, res) => {
     });
   }
 
+  const payment = {
+    rideId: rideId,
+    userId: userId,
+    amount: ride.amount,
+    type: ride.paymentMethod,
+    createdAt: sequelize.fn("NOW"),
+    updatedAt: sequelize.fn("NOW"),
+  };
+  await models.Payment.create(payment);
+
   user.status = USER_STATUS.NoRide;
   await user.save();
 
   ride.status = RIDE_STATUS.Completed;
+  ride.endTime = sequelize.fn("NOW");
   await ride.save();
 
   driver.status = DRIVER_STATUS.Ready;

@@ -34,7 +34,7 @@ controller.book = async (req, res) => {
 
   return res.json({
     success: true,
-    rideId: newRide.id,
+    ride: newRide,
   });
 };
 

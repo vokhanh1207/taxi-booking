@@ -10,16 +10,26 @@ const userController = require("./controller/userController");
 const passport = require("./controller/passport");
 const flash = require("connect-flash");
 const session = require("express-session");
-const { RIDE_STATUS, DRIVER_STATUS, USER_STATUS } = require("./controller/constants");
+const {
+  RIDE_STATUS,
+  DRIVER_STATUS,
+  USER_STATUS,
+} = require("./controller/constants");
 const Handlebars = require("handlebars");
+let models = require("./models");
+const Utils = require("./controller/utils");
 
-Handlebars.registerHelper('ifeq', function (a, b, options) {
-  if (a == b) { return options.fn(this); }
+Handlebars.registerHelper("ifeq", function (a, b, options) {
+  if (a == b) {
+    return options.fn(this);
+  }
   return options.inverse(this);
 });
 
-Handlebars.registerHelper('ifnoteq', function (a, b, options) {
-  if (a != b) { return options.fn(this); }
+Handlebars.registerHelper("ifnoteq", function (a, b, options) {
+  if (a != b) {
+    return options.fn(this);
+  }
   return options.inverse(this);
 });
 // cau hinh public folder
@@ -68,7 +78,7 @@ app.get("/createTables", (req, res) => {
     res.send("Tables created successfully!");
   });
 });
-app.set('rideAndDriverSkipped', new Map());
+app.set("rideAndDriverSkipped", new Map());
 app.get("/login", authController.show);
 app.post("/login", authController.login);
 
@@ -80,7 +90,7 @@ app.use(authController.isLoggedIn);
 
 // Pages
 app.get("/", (req, res) => {
-  res.render("index", { 
+  res.render("index", {
     user: req.user,
     userStringified: JSON.stringify(req.user),
   });
@@ -111,7 +121,7 @@ app.get("/admin/kyc", async (req, res) => {
 
   res.render("kyc", {
     user: req.user,
-    drivers
+    drivers,
   });
 });
 
@@ -119,7 +129,7 @@ app.get("/admin/kyc/:id", async (req, res) => {
   if (!req.user.isAdmin) {
     return res.redirect("/");
   }
-  let models = require("./models");
+
   const approve = req.query.approve;
 
   const driver = await models.Driver.findOne({
@@ -127,6 +137,13 @@ app.get("/admin/kyc/:id", async (req, res) => {
       id: req.params.id,
     },
   });
+
+  const car = await models.Car.findOne({
+    where: {
+      driverId: driver.id,
+    },
+  });
+
   if (approve) {
     driver.status = DRIVER_STATUS.Inactive;
     await driver.save();
@@ -134,10 +151,40 @@ app.get("/admin/kyc/:id", async (req, res) => {
 
   res.render("kyc-details", {
     user: req.user,
-    driver
+    driver,
+    car,
   });
 });
 
+app.get("/bookings", async (req, res) => {
+  let where = {};
+
+  // if driver
+  if (req.user.idNumber) {
+    where = {
+      driverId: req.user.id,
+    };
+  } else {
+    where = {
+      userId: req.user.id,
+    };
+  }
+  let rides = await models.Ride.findAll({
+    where,
+    order: [["createdAt", "DESC"]],
+    limit: 100,
+  });
+  rides = rides.map((ride) => {
+    ride.createdAtFormatted = ride.createdAt.toLocaleString("vi-VN");
+    ride.amountFormatted = Utils.numberWithCommas(ride.amount);
+    return ride;
+  });
+
+  res.render("bookings", {
+    user: req.user,
+    rides,
+  });
+});
 
 // APIs
 app.post("/book", rideController.book);
@@ -156,8 +203,9 @@ app.post("/driver/confirmPicking", driverController.confirmPicking);
 app.post("/driver/complete", driverController.complete);
 app.post("/driver/skipRide", driverController.skipRide);
 app.get("/driver/currentRide", driverController.currentRide);
+
 app.get("/driver/driver-complete", (req, res) => {
-    res.render("complete-page")
+  res.render("complete-page");
 });
 
 //khoi dong web server
