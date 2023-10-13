@@ -51,6 +51,10 @@ controller.cancel = async (req, res) => {
     });
   }
 
+  const user = await models.User.findOne({ where: { id: ride.userId } });
+  user.status = USER_STATUS.NoRide;
+  await user.save();
+
   ride.status = RIDE_STATUS.Canceled;
   await ride.save();
 

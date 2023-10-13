@@ -266,7 +266,7 @@ controller.confirmPicking = async (req, res) => {
       success: false,
     });
   }
-  user.status = USER_STATUS.NoRide;
+  user.status = USER_STATUS.Riding;
   await user.save();
 
   req.app.get('rideAndDriverSkipped').delete(rideId);
