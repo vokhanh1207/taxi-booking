@@ -224,11 +224,6 @@ function userCheckOnload() {
             setRouteOnMap(res.ride.fromLocation, res.ride.toLocation);
           });
           checkBooking(res.ride.id);
-          // onMapReady.subscribe(() => {
-          //   console.log("fasdf");
-          //   checkBooking();
-          //   setRouteOnMap(res.ride.fromLocation, res.ride.toLocation);
-          // });
         }
       }
     });
@@ -511,6 +506,8 @@ function getBooking(id) {
           return;
         }
 
+      currentRide.ride = res.ride;
+
       if (res.success && res.driver && res.ride?.status == "PICKING") {
         console.log("found a driver");
         $(".booking-loading").hide();
@@ -591,7 +588,6 @@ function getBooking(id) {
         $("#toLocation").val(res.ride.toAddress);
       }
 
-      currentRide.ride = res.ride;
     });
 }
 function cancelBooking() {
@@ -656,7 +652,7 @@ function openFoundRideModel() {
   clearInterval(currentDriver.checkBookingInterval);
   $(".ride-from").html(currentDriver.ride.fromAddress);
   $("#ride-to").html(currentDriver.ride.toAddress);
-  $("#ride-distance").html(Math.ceil(currentDriver.ride.distance / 100) / 10 + "km");
+  $("#ride-distance").html(Math.ceil(currentDriver.ride.distance / 100) / 10 + " KM");
   $("#ride-amount").html(formatCurrency(currentDriver.ride.amount));
   $("#payment-method").html(currentDriver.ride.paymentMethod);
   $("#ride-note").html(currentDriver.ride.note);
@@ -753,6 +749,7 @@ function driverAcceptRide() {
         clearDriverMarkers();
         clearInterval(currentDriver.checkBookingInterval);
         clearInterval(currentDriver.rideAcceptInterval);
+        setRouteOnMap(currentDriver.ride.fromLocation, currentDriver.ride.toLocation);
         $("#driver-waiting").hide();
         $("#driver-picking").show();
       }
@@ -772,10 +769,10 @@ function driverConfirmPicking() {
       if (res.success) {
         $("#driver-picking").hide();
         $("#driver-riding").show();
-        setRouteOnMap(
-          currentDriver.ride.fromLocation,
-          currentDriver.ride.toLocation
-        );
+        // setRouteOnMap(
+        //   currentDriver.ride.fromLocation,
+        //   currentDriver.ride.toLocation
+        // );
       }
     });
 }

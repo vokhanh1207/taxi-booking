@@ -6,29 +6,29 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Mã chuyến</th>
+                <th scope="col">Đặt lúc</th>
                 <th scope="col">Điểm đi</th>
                 <th scope="col">Điểm đến</th>
                 <th scope="col">Quãng đường</th>
                 <th scope="col">Số tiền</th>
-                <th scope="col">Trạng thái</th>
-                <th scope="col">Đặt lúc</th>
                 <th scope="col">Ghi chú</th>
+                <th scope="col">Trạng thái</th>
             </tr>
         </thead>
         <tbody>
             {{#each rides}}
             <tr>
-                <td scope="row" class="align-middle">{{@index}}</td>
-                <td class="align-middle">{{id}}</td>
-                <td class="align-middle">{{fromAddress}}</td>
-                <td class="align-middle">{{toAddress}}</td>
-                <td class="align-middle">{{fomattedDistance}}</td>
-                <td class="align-middle">{{amountFormatted}} VNĐ</td>
-                <td class="align-middle">
+                <td scope="row" class=" ">{{@index}}</td>
+                <td class=" ">{{id}}</td>
+                <td class=" ">{{createdAtFormatted}}</td>
+                <td class=" ">{{fromAddress}}</td>
+                <td class=" ">{{toAddress}}</td>
+                <td class=" ">{{fomattedDistance}}</td>
+                <td class=" ">{{amountFormatted}} VNĐ</td>
+                <td class=" ">{{note}}</td>
+                <td class=" ">
                     <span class="badge status-bg-{{status}}">{{status}}</span>
                 </td>
-                <td class="align-middle">{{createdAtFormatted}}</td>
-                <td class="align-middle">{{note}}</td>
             </tr>
             {{/each}}
         </tbody>

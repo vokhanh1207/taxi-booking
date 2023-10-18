@@ -178,7 +178,7 @@ app.get("/bookings", async (req, res) => {
     ride.createdAtFormatted = ride.createdAt.toLocaleString("vi-VN");
     ride.amountFormatted = Utils.numberWithCommas(ride.amount);
     // 9657m -> 9700m -> 9.7km
-    ride.fomattedDistance = Math.ceil(ride.distance / 100) / 10 + "KM";
+    ride.fomattedDistance = Math.ceil(ride.distance / 100) / 10 + " KM";
     return ride;
   });
 
