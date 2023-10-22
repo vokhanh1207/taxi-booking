@@ -1,10 +1,16 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "taxi-booking",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "username": "ngocqui",
+    "password": "aggyt2N0GmVowPlzB1oUWhkIrGYW8Z5K",
+    "database": "gootax",
+    "host": "dpg-ckgkinkldqrs73dfk9fg-a.singapore-postgres.render.com",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   },
   "test": {
     "username": "root",

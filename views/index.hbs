@@ -10,7 +10,7 @@
         <div class="booking-area">
             <form onsubmit="checkPrice(event)">
                 <div class="mb-3 row">
-                    <label for="fromLocation" class="col-sm-3 col-form-label">Điểm đi</label>
+                    <label for="fromLocation" class="col-sm-3 col-form-label d-none d-sm-block">Điểm đi</label>
                     <div class="col-sm-9">
                         <div class="from-location-box search-input">
                             <div class="input">
@@ -23,12 +23,12 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label for="toLocation" class="col-sm-3 col-form-label">Điểm đến</label>
+                    <label for="toLocation" class="col-sm-3 col-form-label d-none d-sm-block">Điểm đến</label>
                     <div class="col-sm-9">
                         <div class="search-input to-location-box">
                             <div class="input">
                                 <input autocomplete="off" type="text" class="form-control" id="toLocation"
-                                    onkeyup="debounceSearchPlaces(event)">
+                                    placeholder="Điểm đến" onkeyup="debounceSearchPlaces(event)">
                             </div>
                             <div class="search-suggestion-list" id="search-suggestion-list" style="display: none;">
                             </div>
@@ -43,7 +43,7 @@
                 </div>
             </form>
             <div class="price-section" id="price-section" style="display: none;">
-                <div class="row" data-taxi-type="4seat">
+                <div class="row" data-taxi-type="XE-4-CHO">
                     <label class="col-3 col-sm-3 col-form-label">Xe 4 chỗ</label>
                     <label class="col-6 col-sm-7 col-form-label price" id="price-4-seat"></label>
                     <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
@@ -52,7 +52,7 @@
                     </label>
                 </div>
 
-                <div class="row" data-taxi-type="4seatVIP">
+                <div class="row" data-taxi-type="XE-4-VIP">
                     <label class="col-3 col-sm-3 col-form-label">Xe 4 chỗ VIP</label>
                     <label class="col-6 col-sm-7 col-form-label price" id="price-4-seat-vip"></label>
                     <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
@@ -60,7 +60,7 @@
                             data-bs-target="#exampleModal">Chọn</button>
                     </label>
                 </div>
-                <div class="row" data-taxi-type="7seat">
+                <div class="row" data-taxi-type="XE-7-CHO">
                     <label class="col-3 col-sm-3 col-form-label">Xe 7 chỗ</label>
                     <label class="col-6 col-sm-7 col-form-label price" id="price-7-seat"></label>
                     <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
@@ -68,7 +68,7 @@
                             data-bs-target="#exampleModal">Chọn</button>
                     </label>
                 </div>
-                <div class="row" data-taxi-type="7seatVIP">
+                <div class="row" data-taxi-type="XE-7-VIP">
                     <label class="col-3 col-sm-3 col-form-label">Xe 7 chỗ VIP</label>
                     <label class="col-6 col-sm-7 col-form-label price" id="price-7-seat-vip"></label>
                     <label class="col-3 col-sm-2 col-form-label d-flex justify-content-end">
@@ -79,7 +79,7 @@
             </div>
         </div>
         <div class="found-driver" style="display: none;">
-            <h4>Đã tìm thấy tài xế!</h4>
+            <h5>Đã tìm thấy tài xế!</h5>
             <div class="ride-info">
                 <div class="driver-info">
                     <h5>Thông tin tài xế</h5>
@@ -131,14 +131,14 @@
         </div>
 
         <div class="user-riding" style="display: none;">
-            <h4>Tài xế đã đón</h4>
+            <h5>Tài xế đã đón</h5>
             <div class="ride-info">
                 <p>Chúc bạn có một chuyến đi thuận lợi.</p>
             </div>
         </div>
 
         <div class="user-complete" style="display: none;">
-            <h4>Hoàn thành</h4>
+            <h5>Hoàn thành</h5>
             <div>
                 <p>Bạn đã hoàn thành chuyến đi, cám ơn bạn đã sử dụng dịch vụ, mãi yêu!</p>
                 <button type="button" class="btn btn-primary" onclick="location.reload();">Tìm xe</button>
@@ -146,7 +146,7 @@
         </div>
     </div>
     <div class="col-sm-6">
-        <div id="map" style="width: 100%; height: 500px;"></div>
+        <div id="map"></div>
     </div>
 
     <div class="booking-loading" style="display: none;">

@@ -2,35 +2,46 @@
 
 const controller = {};
 const sequelize = require("sequelize");
-const {RIDE_STATUS, USER_STATUS} = require("./constants");
+const {RIDE_STATUS, CUSTOMER_STATUS} = require("./constants");
 const models = require("../models");
 const passport = require("./passport");
 
 controller.book = async (req, res) => {
+
   const rideOjb = {
-    fromAddress: req.body.fromAddress,
-    toAddress: req.body.toAddress,
-    fromLocation: req.body.fromLocation,
-    toLocation: req.body.toLocation,
     createAt: sequelize.fn("NOW"),
-    userId: req.user.id,
+    updatedAt: sequelize.fn("NOW"),
     status: RIDE_STATUS.Finding,
+
+    from_address_lat: req.body.from_address_lat,
+    from_address_lng: req.body.from_address_lng,
+    to_address_lat: req.body.to_address_lat,
+    to_address_lng: req.body.to_address_lng,
+
+    from_address: req.body.from_address,
+    to_address: req.body.to_address,
+
+    customer_id: req.user.id,
+    
     note: req.body.note,
     amount: req.body.amount,
-    taxiType: req.body.taxiType,
-    paymentMethod: req.body.paymentMethod,
+    // paymentMethod: req.body.paymentMethod,
     distance: req.body.distance,
+    type_car_id: req.body.type_car_id || '5464cc23-9e76-401f-81e5-00fae2630d3a',
   };
 
-  const newRide = await models.Ride.create(rideOjb);
-
-  const user = await models.User.findOne({
+  const customer = await models.Customer.findOne({
     where: {
       id: req.user.id,
     },
   });
-  user.status = USER_STATUS.Waiting;
-  user.save();
+
+  rideOjb.name = customer?.name;
+  rideOjb.phone = customer?.phone;
+  const newRide = await models.Ride.create(rideOjb);
+
+  customer.status = CUSTOMER_STATUS.Waiting;
+  customer.save();
   req.app.get('rideAndDriverSkipped').set(newRide.id, []);
 
   return res.json({
@@ -52,9 +63,9 @@ controller.cancel = async (req, res) => {
     });
   }
 
-  const user = await models.User.findOne({ where: { id: ride.userId } });
-  user.status = USER_STATUS.NoRide;
-  await user.save();
+  const customer = await models.Customer.findOne({ where: { id: ride.customer_id } });
+  customer.status = CUSTOMER_STATUS.NoRide;
+  await customer.save();
 
   ride.status = RIDE_STATUS.Canceled;
   await ride.save();
@@ -80,16 +91,16 @@ controller.getBooking = async (req, res) => {
 
   let driver = null;
   let car = null;
-  if(ride.driverId) {
+  if(ride.driver_id) {
     driver = await models.Driver.findOne({
       where: {
-        id: ride.driverId,
+        id: ride.driver_id,
       },
     });
 
     car = await models.Car.findOne({
       where: {
-        driverId: driver.id,
+        id: driver.car_id,
       },
     });
   }

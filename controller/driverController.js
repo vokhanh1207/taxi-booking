@@ -2,7 +2,7 @@
 
 const controller = {};
 const sequelize = require("sequelize");
-const { RIDE_STATUS, DRIVER_STATUS, USER_STATUS } = require("./constants");
+const { RIDE_STATUS, DRIVER_STATUS, CUSTOMER_STATUS } = require("./constants");
 const models = require("../models");
 const passport = require("./passport");
 const Utils = require("./utils");
@@ -50,7 +50,7 @@ controller.checkBooking = async (req, res) => {
       id: {
         [sequelize.Op.notIn]: excludedRideIds,
       },
-      driverId: null,
+      driver_id: null,
     },
     order: [["createdAt", "ASC"]],
   });
@@ -63,7 +63,6 @@ controller.checkBooking = async (req, res) => {
   }
 
   let closestDriver = req.user;
-
   const excludeDrivers = req.app.get('rideAndDriverSkipped').get(ride.id) || [];
   
   console.log('closestDriver', closestDriver);
@@ -75,10 +74,19 @@ controller.checkBooking = async (req, res) => {
   });
 
   if (drivers || drivers.length > 1) {
-    const pickupLatLng = Utils.fromTextToLatLng(ride.fromLocation);
+    const pickupLatLng = {
+      lat: ride.from_address_lat,
+      lng: ride.from_address_lng
+    };
     drivers.forEach((driver) => {
-      const itemLatLng = Utils.fromTextToLatLng(driver.currentLocation);
-      const closestLatLng = Utils.fromTextToLatLng(closestDriver.currentLocation);
+      const itemLatLng = {
+        lat: driver.current_lat,
+        lng: driver.current_lng
+      };
+      const closestLatLng = {
+        lat: closestDriver.current_lat,
+        lng: closestDriver.current_lng,
+      }
       const itemToUser = Utils.calcCrow(
         pickupLatLng.lat,
         pickupLatLng.lng,
@@ -104,8 +112,8 @@ controller.checkBooking = async (req, res) => {
     });
   }
 
-  // temporarily store driverId for the ride
-  ride.driverId = req.user.id;
+  // temporarily store driver Id for the ride
+  ride.driver_id = req.user.id;
   await ride.save();
 
   return res.json({
@@ -173,7 +181,7 @@ controller.acceptRide = async (req, res) => {
     });
   }
 
-  ride.driverId = driverId;
+  ride.driver_id = driverId;
   ride.status = RIDE_STATUS.Picking;
   ride.startTime = sequelize.fn("NOW");
   await ride.save();
@@ -218,7 +226,7 @@ controller.cancelRide = async (req, res) => {
     });
   }
 
-  ride.driverId = null;
+  ride.driver_id = null;
   ride.status = RIDE_STATUS.Finding;
   await ride.save();
 
@@ -255,19 +263,21 @@ controller.confirmPicking = async (req, res) => {
   ride.status = RIDE_STATUS.Riding;
   await ride.save();
 
-  const userId = ride.userId;
-  const user = await models.User.findOne({
-    where: {
-      id: userId,
-    },
-  });
-  if (!user) {
-    return res.json({
-      success: false,
+  const customerId = ride.customer_id;
+  if (customerId) {
+    const customer = await models.Customer.findOne({
+      where: {
+        id: customerId,
+      },
     });
+    if (!customer) {
+      return res.json({
+        success: false,
+      });
+    }
+    customer.status = CUSTOMER_STATUS.Riding;
+    await customer.save(); 
   }
-  user.status = USER_STATUS.Riding;
-  await user.save();
 
   req.app.get('rideAndDriverSkipped').delete(rideId);
 
@@ -308,30 +318,28 @@ controller.complete = async (req, res) => {
     });
   }
 
-  const userId = ride.userId;
-  const user = await models.User.findOne({
-    where: {
-      id: userId,
-    },
-  });
-  if (!user) {
-    return res.json({
-      success: false,
+  const customerId = ride.customer_id;
+  if (customerId) {
+    const customer = await models.Customer.findOne({
+      where: {
+        id: customerId,
+      },
     });
+    if (customer) {
+      customer.status = CUSTOMER_STATUS.NoRide;
+      await customer.save();
+    }
   }
 
-  const payment = {
-    rideId: rideId,
-    userId: userId,
-    amount: ride.amount,
-    type: ride.paymentMethod,
-    createdAt: sequelize.fn("NOW"),
-    updatedAt: sequelize.fn("NOW"),
-  };
-  await models.Payment.create(payment);
-
-  user.status = USER_STATUS.NoRide;
-  await user.save();
+  // const payment = {
+  //   rideId: rideId,
+  //   userId: userId,
+  //   amount: ride.amount,
+  //   type: ride.paymentMethod,
+  //   createdAt: sequelize.fn("NOW"),
+  //   updatedAt: sequelize.fn("NOW"),
+  // };
+  // await models.Payment.create(payment);
 
   ride.status = RIDE_STATUS.Completed;
   ride.endTime = sequelize.fn("NOW");
@@ -364,7 +372,7 @@ controller.skipRide = async (req, res) => {
     });
   }
 
-  ride.driverId = null;
+  ride.driver_id = null;
   await ride.save();
 
   req.session.skippedRideIds = req.session.skippedRideIds || [];
@@ -402,7 +410,7 @@ controller.currentRide = async (req, res) => {
   if (driver.status === DRIVER_STATUS.Riding) {
     ride = await models.Ride.findOne({
       where: {
-        driverId: driverId,
+        driver_id: driverId,
         status: {
           [sequelize.Op.notIn]: [RIDE_STATUS.Canceled, RIDE_STATUS.Completed],
         },

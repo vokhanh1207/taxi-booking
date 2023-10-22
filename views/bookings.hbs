@@ -1,41 +1,43 @@
-<div class="kyc-view">
-    {{#if rides}}
+<div class="list-view">
     <h4>Lịch sử đặt xe</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Mã chuyến</th>
-                <th scope="col">Đặt lúc</th>
-                <th scope="col">Điểm đi</th>
-                <th scope="col">Điểm đến</th>
-                <th scope="col">Quãng đường</th>
-                <th scope="col">Số tiền</th>
-                <th scope="col">Ghi chú</th>
-                <th scope="col">Trạng thái</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each rides}}
-            <tr>
-                <td scope="row" class=" ">{{@index}}</td>
-                <td class=" ">{{id}}</td>
-                <td class=" ">{{createdAtFormatted}}</td>
-                <td class=" ">{{fromAddress}}</td>
-                <td class=" ">{{toAddress}}</td>
-                <td class=" ">{{fomattedDistance}}</td>
-                <td class=" ">{{amountFormatted}} VNĐ</td>
-                <td class=" ">{{note}}</td>
-                <td class=" ">
-                    <span class="badge status-bg-{{status}}">{{status}}</span>
-                </td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
+    {{#if rides}}
+    <div class="table-container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Mã chuyến</th>
+                    <th scope="col">Đặt lúc</th>
+                    <th scope="col">Điểm đi</th>
+                    <th scope="col">Điểm đến</th>
+                    <th scope="col">Quãng đường</th>
+                    <th scope="col">Số tiền</th>
+                    <th scope="col">Ghi chú</th>
+                    <th scope="col">Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each rides}}
+                <tr>
+                    <td scope="row" class=" ">{{@index}}</td>
+                    <td class=" ">{{id}}</td>
+                    <td class=" ">{{createdAtFormatted}}</td>
+                    <td class=" ">{{from_address}}</td>
+                    <td class=" ">{{to_address}}</td>
+                    <td class=" ">{{fomattedDistance}}</td>
+                    <td class=" ">{{amountFormatted}} VNĐ</td>
+                    <td class=" ">{{note}}</td>
+                    <td class=" ">
+                        <span class="badge status-bg-{{status}}">{{status}}</span>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     {{else}}
     <div class="alert alert-primary" role="alert">
         Chưa có lịch sử đặt xe
     </div>
     {{/if}}
+    </div>
 </div>

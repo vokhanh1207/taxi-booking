@@ -1,0 +1,60 @@
+<div class="form-page">
+    <form id="sign-up-form" class="form" action="/sign-up" method="POST" autocomplete="false">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4 class="mb-4">Đăng ký tài khoản</h4>
+            </div>
+        </div>
+        {{#if signUpMessage}}
+        <div class="mt-3 mb-3 alert alert-danger" role="alert">
+            {{signUpMessage}}
+        </div>
+        {{/if}}
+        <div class="sign-up-details">
+            <h5>Thông tin đăng nhập</h5>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="phone">Số điện thoại</label>
+                        <input type="text" id="phone" class="form-control" name="phone" required autocorrect="off" spellcheck="false" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="password">Mât khẩu</label>
+                        <input type="password" class="form-control" name="password" required />
+                    </div>
+                </div>
+            </div>
+            <h5>Thông tin chi tiết</h5>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="name">Họ tên</label>
+                        <input type="text" class="form-control" name="name" required />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="name">Giới tính</label>
+                        <select class="form-select" name="gender" required>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="avatar">Ảnh đại diện</label>
+                        <input type="text" id="avatar" class="form-control" name="avatar" />
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary btn-block mb-4">Đăng ký</button>
+            </div>
+        </div>
+    </form>
+</div>

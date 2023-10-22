@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/vokhanh1207/taxi-booking#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "connect-flash": "^0.1.1",
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2",

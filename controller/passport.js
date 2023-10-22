@@ -1,9 +1,14 @@
 "use strict";
 
+const bcrypt = require("bcrypt");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-// const bcript = require('bcrypt');
 const models = require("../models");
+const {
+  RIDE_STATUS,
+  DRIVER_STATUS,
+  CUSTOMER_STATUS,
+} = require("../controller/constants");
 
 // duoc goi sau khi xac thuc thanh cong va luu thong tin user
 passport.serializeUser((user, done) => {
@@ -15,18 +20,17 @@ passport.deserializeUser(async (user, done) => {
   try {
     let currentUser = null;
     const query = {
-      attributes: ["id", "email", "firstName", "lastName", "mobile", "status"],
+      attributes: ["id", "phone", "name", "status", "avatar"],
       where: { id: user.id },
     };
 
     // if user is driver
     console.log('deserializeUser', user);
-    if (user.idNumber) {
-      query.attributes.push("idNumber", "currentLocation");
+    if (user.car_id) {
+      query.attributes.push("car_id", "current_lat", "current_lng");
       currentUser = await models.Driver.findOne(query);
     } else {
-      query.attributes.push("isAdmin");
-      currentUser = await models.User.findOne(query);
+      currentUser = await models.Customer.findOne(query);
     }
     done(null, currentUser);
   } catch (error) {
@@ -39,32 +43,34 @@ passport.use(
   "local-login",
   new LocalStrategy(
     {
-      usernameField: "email",
+      usernameField: "phone",
       passwordField: "password",
       passReqToCallback: true, // cho phep truyen req vao callback
     },
-    async (req, email, password, done) => {
-      if (email) {
-        email = email.toLowerCase();
+    async (req, phone, password, done) => {
+      if (phone) {
+        phone = phone.toLowerCase();
       }
 
       try {
         if (!req.user) {
           // user chua dang nhap
-          let user = await models.User.findOne({ where: { email: email } });
+          let user = await models.Customer.findOne({ where: { phone: phone } });
           if (!user) {
             return done(
               null,
               false,
-              req.flash("loginMessage", "Email does not exist")
+              req.flash("loginMessage", "Số điện thoại không tồn tại")
             );
           }
 
-          if (password != user.password) {
+          const passMatched = bcrypt.compareSync(password, user.password);
+
+          if (!passMatched) {
             return done(
               null,
               false,
-              req.flash("loginMessage", "Wrong password")
+              req.flash("loginMessage", "Sai mật khẩu")
             );
           }
 
@@ -84,13 +90,13 @@ passport.use(
   "driver-login-passport",
   new LocalStrategy(
     {
-      usernameField: "email",
+      usernameField: "phone",
       passwordField: "password",
       passReqToCallback: true, // cho phep truyen req vao callback
     },
-    async (req, email, password, done) => {
-      if (email) {
-        email = email.toLowerCase();
+    async (req, phone, password, done) => {
+      if (phone) {
+        phone = phone.toLowerCase();
       }
 
       try {
@@ -99,33 +105,42 @@ passport.use(
           let driver = await models.Driver.findOne({
             attributes: [
               "id",
-              "email",
-              "firstName",
-              "lastName",
-              "mobile",
-              "password",
+              "phone",
+              "name",
               "status",
-              "idNumber",
-              "currentLocation",
+              "avatar",
+              "password",
+              "car_id",
+              "current_lat",
+              "current_lng",
             ],
-            where: { email: email },
+            where: { phone },
           });
           if (!driver) {
             return done(
               null,
               false,
-              req.flash("loginMessage", "Email does not exist")
+              req.flash("loginMessage", "Số điện thoại chưa được đăng ký.")
             );
           }
 
-          if (password != driver.password) {
+          const passMatched = bcrypt.compareSync(password, driver.password);
+
+          if (!passMatched) {
             return done(
               null,
               false,
-              req.flash("loginMessage", "Wrong password")
+              req.flash("loginMessage", "Sai mật khẩu.")
             );
           }
 
+          if (driver.status === DRIVER_STATUS.Init) {
+            return done(
+              null,
+              false,
+              req.flash("loginMessage", "Tài khoản chưa được duyệt.")
+            );
+          }
           return done(null, driver);
         }
 

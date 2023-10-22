@@ -1,0 +1,148 @@
+<div class="kyc-details">
+    <form id="sign-up-form" class="form" action="/driver-sign-up" method="POST">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4 class="mb-4">Đăng ký tài khoản tài xế</h4>
+            </div>
+        </div>
+        {{#if signUpMessage}}
+        <div class="mt-3 mb-3 alert alert-danger" role="alert">
+            {{signUpMessage}}
+        </div>
+        {{/if}}
+        {{#if successMessage}}
+        <div class="mt-3 mb-3 alert alert-success" role="alert">
+            {{successMessage}}
+        </div>
+        {{/if}}
+        <div class="sign-up-details">
+            <h5>Thông tin đăng nhập</h5>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="phone">Số điện thoại</label>
+                        <input type="text" id="phone" class="form-control" name="phone" required />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="password">Mât khẩu</label>
+                        <input type="password" class="form-control" name="password" required />
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="driver-info">
+                <h5>Thông tin cá nhân</h5>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="name">Họ tên</label>
+                            <input type="text" class="form-control" name="name" required />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="name">Giới tính</label>
+                            <select class="form-select" name="gender" required>
+                                <option value="MALE">Nam</option>
+                                <option value="FEMALE">Nữ</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="avatar">Ảnh đại diện</label>
+                            <input type="text" class="form-control" name="avatar" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="car-info">
+                <h5>Thông tin xe</h5>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="car_name">Tên xe</label>
+                            <input type="text" class="form-control" name="car_name" required />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="car_license_plate">Biển số</label>
+                            <input type="text" class="form-control" name="car_license_plate" required />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="car_company_id">Hãng xe</label>
+                            <select class="form-select" name="car_company_id">
+                                {{#each carCompanies}}
+                                <option value="{{id}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="car_vehicle">Dòng xe</label>
+                            <select class="form-select" name="car_vehicle">
+                                {{#each carVehicles}}
+                                <option value="{{id}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="car_style_id">Kiểu dáng</label>
+                            <select class="form-select" name="car_style_id">
+                                {{#each carStyles}}
+                                <option value="{{id}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="car_type_id">Loại dịch vụ</label>
+                            <select class="form-select" name="car_type_id">
+                                {{#each carTypes}}
+                                <option value="{{id}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="car_seat">Số chỗ</label>
+                            <select class="form-select" name="car_seat">
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="7">7</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="car_year">Năm sản xuất</label>
+                            <input type="text" class="form-control" name="car_year" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="car_avatar">Ảnh xe</label>
+                            <input type="file" accept="image/*" class="form-control" name="car_avatar" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary btn-block mb-4">Đăng ký</button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -15,13 +15,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'rideId'
       });
       Payment.belongsTo(models.User, {
-        foreignKey: 'userId'
+        foreignKey: 'user_id'
       });
     }
   }
   Payment.init({
     rideId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
+    user_id: DataTypes.INTEGER,
     amount: DataTypes.DECIMAL,
     type: DataTypes.STRING,
     createdAt: DataTypes.DATE,

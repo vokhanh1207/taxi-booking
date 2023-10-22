@@ -7,13 +7,14 @@ const authController = require("./controller/authController");
 const rideController = require("./controller/rideController");
 const driverController = require("./controller/driverController");
 const userController = require("./controller/userController");
+const signUpController = require("./controller/signUpController");
 const passport = require("./controller/passport");
 const flash = require("connect-flash");
 const session = require("express-session");
 const {
   RIDE_STATUS,
   DRIVER_STATUS,
-  USER_STATUS,
+  CUSTOMER_STATUS,
 } = require("./controller/constants");
 const Handlebars = require("handlebars");
 let models = require("./models");
@@ -86,6 +87,10 @@ app.get("/driver-login", authController.showDriverLogin);
 app.post("/driver-login", authController.driverLogin);
 app.get("/logout", authController.logout);
 
+app.get("/sign-up", signUpController.customerSignupShow);
+app.post("/sign-up", signUpController.customerSignupAdd);
+app.get("/driver-sign-up", signUpController.driverSignupShow);
+app.post("/driver-sign-up", signUpController.driverSignupAdd);
 app.use(authController.isLoggedIn);
 
 // Pages
@@ -97,7 +102,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/driver", (req, res) => {
-  if (!req.user.idNumber) {
+  if (!req.user.car_id) {
     return res.redirect("/");
   }
 
@@ -160,13 +165,13 @@ app.get("/bookings", async (req, res) => {
   let where = {};
 
   // if driver
-  if (req.user.idNumber) {
+  if (req.user.car_id) {
     where = {
-      driverId: req.user.id,
+      driver_id: req.user.id,
     };
   } else {
     where = {
-      userId: req.user.id,
+      customer_id: req.user.id,
     };
   }
   let rides = await models.Ride.findAll({

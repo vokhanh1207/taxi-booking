@@ -2,7 +2,7 @@
 
 const controller = {};
 const sequelize = require("sequelize");
-const { RIDE_STATUS, DRIVER_STATUS, USER_STATUS } = require("./constants");
+const { RIDE_STATUS, DRIVER_STATUS, CUSTOMER_STATUS } = require("./constants");
 const models = require("../models");
 const passport = require("./passport");
 
@@ -26,27 +26,27 @@ controller.ongoingRide = async (req, res) => {
     });
   }
 
-  const user = await models.User.findOne({
+  const customer = await models.Customer.findOne({
     where: {
       id: req.user.id,
     },
   });
 
   let ride = null;
-  if(user && user.status !== USER_STATUS.NoRide) {
+  if(customer && customer.status !== CUSTOMER_STATUS.NoRide) {
     ride = await models.Ride.findOne({
       where: {
-        userId: user.id,
+        customer_id: customer.id,
         status: {
           [sequelize.Op.notIn]: [RIDE_STATUS.Canceled, RIDE_STATUS.Completed],
-        },
+        }
       },
     });
   }
 
   return res.json({
     success: true,
-    user: user,
+    user: customer,
     ride
   });
 };

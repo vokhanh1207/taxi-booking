@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Ride.belongsTo(models.User, {
-        foreignKey: 'userId'
+      Ride.belongsTo(models.Customer, {
+        foreignKey: 'customer_id'
       });
       Ride.belongsTo(models.Driver, {
-        foreignKey: 'driverId'
+        foreignKey: 'driver_id'
       });
       Ride.hasMany(models.Payment, {
         foreignKey: 'rideId'
@@ -23,22 +23,33 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Ride.init({
-    fromAddress: DataTypes.STRING,
-    toAddress: DataTypes.STRING,
-    fromLocation: DataTypes.STRING,
-    toLocation: DataTypes.STRING,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
+    status: DataTypes.STRING,
+    customer_id: DataTypes.STRING,
+    driver_id: DataTypes.STRING,
+    from_address_lat: DataTypes.INTEGER,
+    from_address_lng: DataTypes.INTEGER,
+    to_address_lat: DataTypes.INTEGER,
+    to_address_lng: DataTypes.INTEGER,
+
+    from_address: DataTypes.STRING,
+    to_address: DataTypes.STRING,
+    type_car_id: DataTypes.STRING,
+    
+    name: DataTypes.STRING,
+    phone: DataTypes.STRING,
+
     startTime: DataTypes.DATE,
     endTime: DataTypes.DATE,
     amount: DataTypes.DECIMAL,
     distance: DataTypes.DECIMAL,
-    status: DataTypes.STRING,
     note: DataTypes.STRING,
-    taxiType: DataTypes.STRING,
     paymentMethod: DataTypes.STRING,
-    distance: DataTypes.DECIMAL,
   }, {
     sequelize,
     modelName: 'Ride',
+    tableName: 'book-cars'
   });
   return Ride;
 };
