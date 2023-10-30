@@ -50,13 +50,16 @@ function driverCheckOnLoad() {
 
         if (res.ride) {
           onMapReady.subscribe(() => {
-            setRouteOnMap({
-              lat: res.ride.from_address_lat,
-              lng: res.ride.from_address_lng
-            }, {
-              lat: res.ride.to_address_lat,
-              lng: res.ride.to_address_lng
-            });
+            setRouteOnMap(
+              {
+                lat: res.ride.from_address_lat,
+                lng: res.ride.from_address_lng,
+              },
+              {
+                lat: res.ride.to_address_lat,
+                lng: res.ride.to_address_lng,
+              }
+            );
           });
         }
 
@@ -164,7 +167,7 @@ function getDrivers() {
           return {
             lat: driver.current_lat,
             lng: driver.current_lng,
-          }
+          };
         });
 
         clearDriverMarkers();
@@ -187,25 +190,50 @@ function searchPlaces(event) {
 
   const service = new google.maps.places.PlacesService(map);
   service.findPlaceFromQuery(request, function (results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      let resultHtml = "";
-      for (var i = 0; i < results.length; i++) {
-        searchResult[i] = results[i];
-        const address = results[i].formatted_address;
-        const long = results[i].geometry.location.lng();
-        const lat = results[i].geometry.location.lat();
-
-        resultHtml +=
-          `<div class="result-item" location-temp-id=${i} log="${long}" lat="${lat}" onclick="onclickSearch(event)">` +
-          address +
-          `</div>`;
-      }
-      const suggestionList = $(event.target)
-        .closest(".search-input")
-        .find(".search-suggestion-list");
-      suggestionList.html(resultHtml);
-      suggestionList.show();
+    if (status !== google.maps.places.PlacesServiceStatus.OK) {
+      // backup plan for demo purpose
+      results = [
+        {
+          formatted_address:
+            "103 Nguyễn Thị Minh Khai, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam",
+          geometry: {
+            location: {
+              lat: () => 10.787172,
+              lng: () => 106.746827,
+            },
+          },
+        },
+        {
+          formatted_address:
+            "233 Điện Biên Phủ, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam",
+          geometry: {
+            location: {
+              lat: () => 10.787088,
+              lng: () => 106.698402,
+            },
+          },
+        },
+      ];
     }
+    // if (status === google.maps.places.PlacesServiceStatus.OK) {
+    let resultHtml = "";
+    for (var i = 0; i < results.length; i++) {
+      searchResult[i] = results[i];
+      const address = results[i].formatted_address;
+      const long = results[i].geometry.location.lng();
+      const lat = results[i].geometry.location.lat();
+
+      resultHtml +=
+        `<div class="result-item" location-temp-id=${i} log="${long}" lat="${lat}" onclick="onclickSearch(event)">` +
+        address +
+        `</div>`;
+    }
+    const suggestionList = $(event.target)
+      .closest(".search-input")
+      .find(".search-suggestion-list");
+    suggestionList.html(resultHtml);
+    suggestionList.show();
+    // }
   });
 }
 
@@ -229,16 +257,19 @@ function userCheckOnload() {
         }
 
         if (res.ride) {
-          $('#fromLocation').val(res.ride.from_address);
-          $('#toLocation').val(res.ride.to_address);
+          $("#fromLocation").val(res.ride.from_address);
+          $("#toLocation").val(res.ride.to_address);
           onMapReady.subscribe(() => {
-            setRouteOnMap({
-              lat: res.ride.from_address_lat,
-              lng: res.ride.from_address_lng,
-            },{
-              lat: res.ride.to_address_lat,
-              lng: res.ride.to_address_lng,
-            });
+            setRouteOnMap(
+              {
+                lat: res.ride.from_address_lat,
+                lng: res.ride.from_address_lng,
+              },
+              {
+                lat: res.ride.to_address_lat,
+                lng: res.ride.to_address_lng,
+              }
+            );
           });
           checkBooking(res.ride.id);
         }
@@ -283,31 +314,30 @@ const setRouteOnMap = (fromLatLng, toLatLng, options = {}) => {
   try {
     clearRouteOnMap();
     const localMap = map || window.map;
-  directionsService = new google.maps.DirectionsService();
-  directionsRenderer = new google.maps.DirectionsRenderer(options);
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer(options);
 
-  // const startLocation = fromTextToLatLng(fromLatLng);
-  // const endLocation = fromTextToLatLng(toLatLng);
-  const start = new google.maps.LatLng(fromLatLng.lat, fromLatLng.lng);
-  const end = new google.maps.LatLng(toLatLng.lat, toLatLng.lng);
+    // const startLocation = fromTextToLatLng(fromLatLng);
+    // const endLocation = fromTextToLatLng(toLatLng);
+    const start = new google.maps.LatLng(fromLatLng.lat, fromLatLng.lng);
+    const end = new google.maps.LatLng(toLatLng.lat, toLatLng.lng);
 
-  directionsRenderer.setMap(localMap);
+    directionsRenderer.setMap(localMap);
 
-  var request = {
-    origin: start,
-    destination: end,
-    travelMode: "DRIVING",
-  };
+    var request = {
+      origin: start,
+      destination: end,
+      travelMode: "DRIVING",
+    };
 
-  directionsService.route(request, function (result, status) {
-    if (status == "OK") {
-      directionsRenderer.setDirections(result);
-    }
-  });
+    directionsService.route(request, function (result, status) {
+      if (status == "OK") {
+        directionsRenderer.setDirections(result);
+      }
+    });
   } catch (error) {
-    console.log('error', error);
+    console.log("error", error);
   }
-
 };
 
 function onclickSearch(e) {
@@ -354,6 +384,46 @@ function checkPrice(e) {
     if (status == "OK") {
       $("#fromLocation").val(result.routes[0].legs[0].start_address);
       const distance = result.routes[0].legs[0].distance.value;
+      bookingInfo.distance = distance;
+      const roundedDistance = Math.ceil(distance / 1000);
+
+      // calculate price
+      // 4 seat: 14k/km
+      // 4 seat VIP: 16k/km
+      // 7 seat: 17k/km
+      // 7 seat VIP: 19k/km
+      const price4Seat = roundedDistance * 14000;
+      const price4SeatVIP = roundedDistance * 16000;
+      const price7Seat = roundedDistance * 17000;
+      const price7SeatVIP = roundedDistance * 19000;
+
+      $("#price-4-seat")
+        .html(formatCurrency(price4Seat))
+        .closest(".row")
+        .attr("data-price", price4Seat);
+      $("#price-4-seat-vip")
+        .html(formatCurrency(price4SeatVIP))
+        .closest(".row")
+        .attr("data-price", price4SeatVIP);
+      $("#price-7-seat")
+        .html(formatCurrency(price7Seat))
+        .closest(".row")
+        .attr("data-price", price7Seat);
+      $("#price-7-seat-vip")
+        .html(formatCurrency(price7SeatVIP))
+        .closest(".row")
+        .attr("data-price", price7SeatVIP);
+
+      $("#price-section").show();
+
+      clearDriverMarkers();
+      clearFromToMarkers();
+      directionsRenderer.setDirections(result);
+    }
+    // backup plan for demo purpose
+    else {
+      $("#fromLocation").val('103 Nguyễn Thị Minh Khai, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam');
+      const distance = 6460;
       bookingInfo.distance = distance;
       const roundedDistance = Math.ceil(distance / 1000);
 
@@ -443,11 +513,16 @@ function bookCar() {
   const selectedRide = $("#price-section").find(".row.selected");
   const body = {
     from_address_lat: bookingInfo.fromMarker?.getPosition()?.lat() || 10.713502,
-    from_address_lng: bookingInfo.fromMarker?.getPosition()?.lng() || 106.610019,
+    from_address_lng:
+      bookingInfo.fromMarker?.getPosition()?.lng() || 106.610019,
     to_address_lat: bookingInfo.toMarker?.getPosition()?.lat() || 10.787088,
     to_address_lng: bookingInfo.toMarker?.getPosition()?.lng() || 106.698402,
-    from_address: $("#fromLocation").val() || "103 Nguyễn Thị Minh Khai, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam",
-    to_address: $("#toLocation").val() || '233 Điện Biên Phủ, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam',
+    from_address:
+      $("#fromLocation").val() ||
+      "103 Nguyễn Thị Minh Khai, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam",
+    to_address:
+      $("#toLocation").val() ||
+      "233 Điện Biên Phủ, phường 6, Quận 3, Thành phố Hồ Chí Minh, Việt Nam",
 
     note: $("#note").val(),
     amount: selectedRide.attr("data-price"),
@@ -469,10 +544,12 @@ function bookCar() {
         currentRide.ride = res.ride;
         const rideId = res.ride.id;
         if (user?.isAdmin) {
-          $('.admin-last-booking-id').text(rideId);
-          $('.admin-booking-success').fadeIn();
-          $('.price-section').hide();
-          setTimeout(() => { $('.admin-booking-success').fadeOut(); }, 4000);
+          $(".admin-last-booking-id").text(rideId);
+          $(".admin-booking-success").fadeIn();
+          $(".price-section").hide();
+          setTimeout(() => {
+            $(".admin-booking-success").fadeOut();
+          }, 4000);
           clearFromToMarkers();
           return;
         }
@@ -481,7 +558,6 @@ function bookCar() {
         $(".booking-loading").show();
       }
     });
-
 }
 
 function userCheckRide() {
@@ -514,13 +590,13 @@ function getBooking(id) {
   })
     .then((res) => res.json())
     .then((res) => {
-      if  (
+      if (
         res.ride?.status == currentRide.ride?.status &&
         res.ride?.id == currentRide.ride?.id &&
         res.ride?.driverId == currentRide.ride?.driverId
-        ) {
-          return;
-        }
+      ) {
+        return;
+      }
 
       currentRide.ride = res.ride;
 
@@ -547,7 +623,7 @@ function getBooking(id) {
         currentRide.driver = res.driver;
         currentRide.ride = res.ride;
 
-        if(!currentRide.driver.currentLocation) {
+        if (!currentRide.driver.currentLocation) {
           return;
         }
 
@@ -608,7 +684,7 @@ function getBooking(id) {
       }
 
       if (res.success && res.ride?.status == "FINDING") {
-        if(user?.isAdmin) {
+        if (user?.isAdmin) {
           return;
         }
         $(".booking-loading").show();
@@ -617,11 +693,10 @@ function getBooking(id) {
         $("#fromLocation").val(res.ride.from_address);
         $("#toLocation").val(res.ride.to_address);
       }
-
     });
 }
 function cancelBooking() {
-  console.log('cancelBooking', currentRide.ride.id)
+  console.log("cancelBooking", currentRide.ride.id);
   fetch(`${window.location.origin}/cancel`, {
     method: "POST",
     headers: {
@@ -685,7 +760,9 @@ function openFoundRideModel() {
   clearInterval(currentDriver.checkBookingInterval);
   $(".ride-from").html(currentDriver.ride.from_address);
   $("#ride-to").html(currentDriver.ride.to_address);
-  $("#ride-distance").html(Math.ceil(currentDriver.ride.distance / 100) / 10 + " KM");
+  $("#ride-distance").html(
+    Math.ceil(currentDriver.ride.distance / 100) / 10 + " KM"
+  );
   $("#ride-amount").html(formatCurrency(currentDriver.ride.amount));
   $("#payment-method").html(currentDriver.ride.paymentMethod);
   $("#ride-note").html(currentDriver.ride.note);
@@ -790,7 +867,7 @@ function driverAcceptRide() {
         clearInterval(currentDriver.rideAcceptInterval);
         setRouteOnMap(driverLatLng, {
           lat: currentDriver.ride.from_address_lat,
-          lng: currentDriver.ride.from_address_lng
+          lng: currentDriver.ride.from_address_lng,
         });
         addDriverMarkers(map, [driverLatLng]);
         $("#driver-waiting").hide();
@@ -814,7 +891,7 @@ function driverConfirmPicking() {
       if (res.success) {
         $("#driver-picking").hide();
         $("#driver-riding").show();
-        
+
         clearDriverMarkers();
         clearFromToMarkers();
         setRouteOnMap(
@@ -828,10 +905,12 @@ function driverConfirmPicking() {
           },
           { suppressMarkers: true }
         );
-        addDriverMarkers(map, [{
-          lat: currentDriver.ride.from_address_lat,
-          lng: currentDriver.ride.from_address_lng,
-        }]);
+        addDriverMarkers(map, [
+          {
+            lat: currentDriver.ride.from_address_lat,
+            lng: currentDriver.ride.from_address_lng,
+          },
+        ]);
       }
     });
 }
@@ -860,7 +939,7 @@ function clearRouteOnMap() {
   try {
     directionsRenderer.set("directions", null);
   } catch (error) {
-    console.log('error', error);
+    console.log("error", error);
   }
 }
 function driverCompleteRideAndBack() {
@@ -870,4 +949,12 @@ function driverCompleteRideAndBack() {
 
   clearRouteOnMap();
   currentDriver.ride = null;
+}
+
+function showPageLoading() {
+  $(".page-loading").show();
+}
+
+function hidePageLoading() {
+  $(".page-loading").hide();
 }

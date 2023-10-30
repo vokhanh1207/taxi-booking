@@ -4,23 +4,23 @@
         <div class="activated-user">
             <form onsubmit="ready(event)" id="driver-ready-form">
                 <div class="text-center">
-                    <h5 class="mb-4">Sẵn sàng đón khách?</h5>
+                    <h5 class="mb-3">Sẵn sàng đón khách?</h5>
                     <button type="submit" class="btn btn-primary mb-3">Sẵn sàng</button>
                 </div>
             </form>
             <div id="driver-waiting" style="display: none;">
                 <div class="text-center">
-                    <h5 class="mb-4">Đang chờ khách, bạn sẽ nhận được thông báo khi có đặt xe!</h5>
+                    <h5 class="mb-3">Đang chờ khách, bạn sẽ nhận được thông báo khi có đặt xe!</h5>
                     <button type="button" class="btn btn-primary mb-3" onclick="driverCancelWaiting()">Tạm nghỉ</button>
                 </div>
             </div>
             <div id="driver-picking" style="display: none;">
                 <div class="text-left">
-                    <h5 class="mb-4">Đón khách tại: </h5>
+                    <h5 class="mb-3">Đón khách tại: </h5>
                     <div class="mt-3 mb-3">
                         <i class="ride-from"></i>
                     </div>
-                    <h5 class="mb-4">Thông tin khách: </h5>
+                    <h5 class="mb-3">Thông tin khách: </h5>
                     <div class="row">
                         <label class="col-sm-3 col-form-label">Tên</label>
                         <label class="col-sm-9 col-form-label" id="customer-name"></label>
@@ -39,14 +39,14 @@
             </div>
             <div id="driver-riding" style="display: none;">
                 <div class="text-center">
-                    <h5 class="mb-4">Nhấn hoàn thành sau khi hoàn thành chuyến đi!</h5>
+                    <h5 class="mb-3">Nhấn hoàn thành sau khi hoàn thành chuyến đi!</h5>
                     <button type="button" class="btn btn-primary mb-3" onclick="driverCompleteRide()">Hoàn
                         thành</button>
                 </div>
             </div>
             <div id="driver-complete" style="display: none;">
                 <div class="text-center">
-                    <h5 class="mb-4">Chúc mừng bạn đã hoàn thành chuyến đi</h5>
+                    <h5 class="mb-3">Chúc mừng bạn đã hoàn thành chuyến đi</h5>
                     <div class="mb-4">Số tiền: <strong id="complete-amount"></strong></div>
                     <button type="button" class="btn btn-primary mb-3" onclick="driverCompleteRideAndBack()">Tiếp tục
                         tìm chuyến</button>
@@ -57,7 +57,7 @@
         {{#ifeq user.status "INIT"}}
         <div class="pending-user">
             <div class="text-center">
-                <h5 class="mb-4 text-warning">Tài khoản của bạn đang được xét duyệt. Vui lòng chờ trước khi có thể nhận
+                <h5 class="mb-3 text-warning">Tài khoản của bạn đang được xét duyệt. Vui lòng chờ trước khi có thể nhận
                     chuyến xe.</h5>
             </div>
         </div>
