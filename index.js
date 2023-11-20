@@ -80,6 +80,7 @@ app.get("/createTables", (req, res) => {
   });
 });
 app.set("rideAndDriverSkipped", new Map());
+app.set("activeDrivers", new Map());
 app.get("/login", authController.show);
 app.post("/login", authController.login);
 
@@ -215,6 +216,30 @@ app.get("/driver/driver-complete", (req, res) => {
   res.render("complete-page");
 });
 
+// check remove active driver.
+(() => {
+  setInterval(async () => {
+    const activeDrivers = app.get("activeDrivers");
+    const now = Date.now();
+    for (let [driverId, lastActive] of activeDrivers) {
+      if (now - lastActive > 9 * 1000) {
+        const driver = await models.Driver.findOne({
+          where: {
+            id: driverId,
+          },
+        });
+
+        if (!driver) {
+          continue;
+        }
+
+        driver.status = DRIVER_STATUS.Inactive;
+        await driver.save();
+        activeDrivers.delete(driverId);
+      }
+    }
+  }, 10 * 1000);
+})();
 //khoi dong web server
 app.listen(port, () => {
   console.log(`Server is running at ${port}`);

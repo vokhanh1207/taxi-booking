@@ -27,7 +27,8 @@ controller.ready = async (req, res) => {
   }
 
   driver.status = DRIVER_STATUS.Ready;
-  // driver.currentLocation = req.body.currentLocation;
+  driver.current_lat = req.body.current_lat;
+  driver.current_lng = req.body.current_lng;
   await driver.save();
 
   return res.json({
@@ -41,6 +42,8 @@ controller.checkBooking = async (req, res) => {
       success: false,
     });
   }
+  const activeDrivers = req.app.get('activeDrivers');
+  activeDrivers.set(req.user.id, Date.now());
 
   const excludedRideIds = req.session.skippedRideIds || [];
 

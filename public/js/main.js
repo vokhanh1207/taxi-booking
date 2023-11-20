@@ -739,7 +739,8 @@ function ready(e) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // currentLocation: `${location.coords.latitude}, ${location.coords.longitude}`,
+        current_lat: location.coords.latitude,
+        current_lng: location.coords.longitude,
       }),
     })
       .then((res) => res.json())
@@ -775,9 +776,9 @@ function openFoundRideModel() {
     $("#countdown-number").text(countdown);
     if (countdown === 0) {
       newRideModal.hide();
-      clearInterval(currentDriver.rideAcceptInterval);
       // send a request to server to cancel ride
       driverSkipRide();
+      clearInterval(currentDriver.rideAcceptInterval);
     }
 
     countdown = --countdown;

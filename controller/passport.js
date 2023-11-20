@@ -141,6 +141,9 @@ passport.use(
               req.flash("loginMessage", "Tài khoản chưa được duyệt.")
             );
           }
+
+          driver.status = DRIVER_STATUS.Inactive;
+          driver = await driver.save();
           return done(null, driver);
         }
 

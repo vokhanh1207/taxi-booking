@@ -1,7 +1,9 @@
 'use strict';
 
+const { DRIVER_STATUS } = require("./constants");
 const controller = {};
 const passport = require('./passport');
+const models = require("../models");
 
 controller.show = (req, res) => {
     if (req.user) {
@@ -60,13 +62,26 @@ controller.isLoggedIn = (req, res, next) => {
     res.redirect('/login');
 };
 
-controller.logout = (req, res) => {
-    req.logout((error) => {
-        if (error) {
-            console.log('Logout error: ', error);
-        }
-        res.redirect('/login');
+controller.logout = async (req, res) => {
+  if (req.user?.car_id) {
+    const driver = await models.Driver.findOne({
+      where: {
+        id: req.user.id,
+      },
     });
+
+    if (!driver) {
+      return res.redirect("/");
+    }
+    driver.status = DRIVER_STATUS.Inactive;
+    await driver.save();
+  }
+  req.logout((error) => {
+    if (error) {
+      console.log("Logout error: ", error);
+    }
+    res.redirect("/login");
+  });
 };
 
 module.exports = controller;
