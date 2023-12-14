@@ -385,17 +385,16 @@ function checkPrice(e) {
       $("#fromLocation").val(result.routes[0].legs[0].start_address);
       const distance = result.routes[0].legs[0].distance.value;
       bookingInfo.distance = distance;
-      const roundedDistance = Math.ceil(distance / 1000);
 
       // calculate price
       // 4 seat: 14k/km
       // 4 seat VIP: 16k/km
       // 7 seat: 17k/km
       // 7 seat VIP: 19k/km
-      const price4Seat = roundedDistance * 14000;
-      const price4SeatVIP = roundedDistance * 16000;
-      const price7Seat = roundedDistance * 17000;
-      const price7SeatVIP = roundedDistance * 19000;
+      const price4Seat = Math.ceil((distance * 14) / 1000) * 1000;
+      const price4SeatVIP = Math.ceil((distance * 16) / 1000) * 1000;
+      const price7Seat = Math.ceil((distance * 17) / 1000) * 1000;
+      const price7SeatVIP = Math.ceil((distance * 19) / 1000) * 1000;
 
       $("#price-4-seat")
         .html(formatCurrency(price4Seat))
